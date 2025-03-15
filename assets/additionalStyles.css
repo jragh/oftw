@@ -1,0 +1,23 @@
+.objs-key-results-header {
+
+    text-align: left;
+}
+
+
+.keys-objs-head-card {
+
+    flex-direction: column;
+    display: flex;
+    justify-content: flex-start;
+    min-height: 5rem;
+    min-width: 20%;
+
+    transition: transform .5s ease-in-out;
+
+}
+
+.keys-objs-head-card:hover {
+
+    transform: scale(1.075);
+
+}
