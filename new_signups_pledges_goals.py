@@ -79,9 +79,25 @@ def generateNewSignupsPledgesGoals(goal_year):
     
     '''
 
+
+    query_pledge_attrition_rate = f'''
+
+        select * from 
+        public.oftw_churn_rate_fy
+        where "Fiscal Year" = {goal_year}
+   
+    '''
+
+    ## Total Active Donors Polars ##
     polars_total_active_donors = pl.read_database_uri(query=query_new_sign_ups_total, uri=postgres_uri, engine='adbc')
 
+    ## Total Active Pledges Polars ##
     polars_total_active_pledges = pl.read_database_uri(query=query_active_pledges_total, uri=postgres_uri, engine='adbc')
+
+    ## Churn Rate Polars ##
+    polars_goal_churn_rate = pl.read_database_uri(query=query_pledge_attrition_rate, uri=postgres_uri, engine='adbc')
+
+    polars_goal_churn_rate = polars_goal_churn_rate.with_columns(((pl.col("Churned Pledges") - pl.col("Added Pledges")) / (pl.col("Active Pledges") + pl.col("Pre Churned Pledges"))).alias("Churn Rate"))
 
     gv1 = polars_total_active_donors.select(pl.col('Number of Donors')).item()
     gv1_goal = 1200
@@ -128,10 +144,44 @@ def generateNewSignupsPledgesGoals(goal_year):
 
         ]
 
+    ## gv3 section ##
+    
+    gv3 = polars_goal_churn_rate.select(pl.col("Churn Rate")).item()
+    ## gv3 = 0.19
+    gv3_goal = 0.18
+
+    gv3_progress = []
+
+    ## Color Coding of Progress bars based on Pct Values ##
+    ## If Within 5% then Orange, If Over then Red, else Green ##
+    print(round(gv3, 2))
+    if (round(gv3, 2) < (gv3_goal - 0.05)):
+
+        gv3_progress = [
+
+            dmc.ProgressSection(dmc.ProgressLabel(f'Exceed Expectations'), value=100, color='green')
+
+        ]
+        
+    elif (round(gv3, 2) >= (gv3_goal - 0.05)) and (round(gv3, 2) < (gv3_goal)):
+
+        gv3_progress = [
+
+            dmc.ProgressSection(dmc.ProgressLabel(f'Within Threshold (5%)'), value=100, color='orange')
+
+        ]
+
+    elif (round(gv3, 2) >= (gv3_goal)):
+
+        gv3_progress = [
+
+            dmc.ProgressSection(dmc.ProgressLabel(f'Above Target'), value=100, color='red')
+
+        ]
 
     return_array = [
-        html.H2('New Sign Ups & Pledges', style={'marginBottom': '0'}),
-        html.H4('Key Objectives & Goals', style={'color': 'grey', 'marginTop': '0'}),
+        html.H2('Key Objectives & Goals', style={'marginBottom': '0'}),
+        html.H4('Pledges & Donors', style={'color': 'grey', 'marginTop': '0'}),
         dmc.Group([
             
             ## Card for Total Active Donors ##
@@ -164,6 +214,28 @@ def generateNewSignupsPledgesGoals(goal_year):
                 dmc.ProgressRoot(
 
                     gv2_progress,
+                    size='xl', mb='xs'
+
+                )
+
+            ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card'),
+
+
+            ## Card for Pledge Attrition Rate ##
+            ## Using Distinct Count of Pledge IDs ##
+            ## (Churned in Fiscal Year - Added in Fiscal Year) / Active Pledges at beginning of Fiscal Year ##
+            ## Goal is 18 Percent ##
+            dmc.Paper([
+                
+                html.H5('Pledge Attrition Rate', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
+                html.Small('Subscription Pledges Only', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
+                html.Small(f'Goal: {gv3_goal:.0%}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
+
+                html.H2(f'{gv3:.2%}', style={'marginTop': '0.5em', 'marginBottom': '0'}), 
+
+                dmc.ProgressRoot(
+
+                    gv3_progress,
                     size='xl', mb='xs'
 
                 )
