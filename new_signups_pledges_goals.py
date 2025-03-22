@@ -5,6 +5,8 @@ import dash_mantine_components as dmc
 
 import os
 
+from pledges_by_type_graph import pledges_by_type_graph
+
 def generateNewSignupsPledgesGoals(goal_year):
 
     postgres_uri = os.getenv('POSTGRES_URI_LOCATION')
@@ -88,6 +90,26 @@ def generateNewSignupsPledgesGoals(goal_year):
    
     '''
 
+    query_pledge_frequency_share = f'''
+
+            select
+        case 
+        	when date_part('month', cast(pledge_created_at as date)) >= 7 then date_part('year', cast(pledge_created_at as date)) + 1
+        	else date_part('year', cast(pledge_created_at as date)) 
+        end as "Fiscal Year",
+
+        case when pledge_status = 'One-Time' then 'One-Time' else 'Subscription' end as "Pledge Type",
+
+        count(distinct pledge_id) "Created Pledges"
+        from public.oftw_pledges_raw
+        where case 
+        	when date_part('month', cast(pledge_created_at as date)) >= 7 then date_part('year', cast(pledge_created_at as date)) + 1
+        	else date_part('year', cast(pledge_created_at as date)) 
+        end = {goal_year}
+        group by 1, 2
+
+    '''
+
     ## Total Active Donors Polars ##
     polars_total_active_donors = pl.read_database_uri(query=query_new_sign_ups_total, uri=postgres_uri, engine='adbc')
 
@@ -97,6 +119,12 @@ def generateNewSignupsPledgesGoals(goal_year):
     ## Churn Rate Polars ##
     polars_goal_churn_rate = pl.read_database_uri(query=query_pledge_attrition_rate, uri=postgres_uri, engine='adbc')
 
+    ## Pledge Share Polars ##
+
+    polars_pledge_frequency_share = pl.read_database_uri(query=query_pledge_frequency_share, uri=postgres_uri, engine='adbc')
+
+
+    ## GV1 Section ##
     polars_goal_churn_rate = polars_goal_churn_rate.with_columns(((pl.col("Churned Pledges") - pl.col("Added Pledges")) / (pl.col("Active Pledges") + pl.col("Pre Churned Pledges"))).alias("Churn Rate"))
 
     gv1 = polars_total_active_donors.select(pl.col('Number of Donors')).item()
@@ -179,9 +207,33 @@ def generateNewSignupsPledgesGoals(goal_year):
 
         ]
 
+    ## gv4 section ##
+    gv4_one_time = polars_pledge_frequency_share.filter(pl.col('Pledge Type') == 'One-Time').select(pl.col('Created Pledges')).item()
+
+    gv4_subscription = polars_pledge_frequency_share.filter(pl.col('Pledge Type') == 'Subscription').select(pl.col('Created Pledges')).item()
+    
+    gv4_total = gv4_one_time + gv4_subscription
+
+    gv4_progress = [
+
+        dmc.ProgressSection(dmc.ProgressLabel(f'Subscription'), value=round((gv4_subscription / gv4_total) * 100, 0), color='#1971c2'),
+        dmc.ProgressSection(dmc.ProgressLabel(f'One Time'), value=round((gv4_one_time / gv4_total) * 100, 0), color='#845ef7')
+
+    ]
+
     return_array = [
-        html.H2('Key Objectives & Goals', style={'marginBottom': '0'}),
-        html.H4('Pledges & Donors', style={'color': 'grey', 'marginTop': '0'}),
+        html.H2('Key Objectives & Goals', style={'marginBottom': '0', 'fontSize': 'xx-large', 'marginTop': '0'}),
+        dmc.Group([
+            
+            html.H4('Pledges & Donors', style={'color': 'grey', 'margin': '0'})
+            ## ,
+
+            # html.Span([
+            #     html.H5('Card Legend', style={'margin': '0', 'fontWeight': 'bold'}),
+            #     dmc.Badge('Goal Progress', color='cyan', radius='xl', size='xs')
+            # ], style={'display': 'flex', 'flexDirection': 'row', 'justifyContent': 'flex-start'})
+            
+        ], justify='space-between', align='center', mb='0.5em'),
         dmc.Group([
             
             ## Card for Total Active Donors ##
@@ -191,7 +243,7 @@ def generateNewSignupsPledgesGoals(goal_year):
                 html.Small('Active & One Time Donors', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
                 html.Small(f'Goal: {gv1_goal:.0f}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
 
-                html.H2(f'{gv1:,.0f}', style={'marginTop': '0.5em', 'marginBottom': '0'}), 
+                html.H2(f'{gv1:,.0f}', style={'marginTop': '0', 'marginBottom': '0'}), 
 
                 dmc.ProgressRoot(
 
@@ -209,7 +261,7 @@ def generateNewSignupsPledgesGoals(goal_year):
                 html.Small('Active Pledges Only', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
                 html.Small(f'Goal: {gv2_goal:.0f}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
 
-                html.H2(f'{gv2:,.0f}', style={'marginTop': '0.5em', 'marginBottom': '0'}), 
+                html.H2(f'{gv2:,.0f}', style={'marginTop': '0', 'marginBottom': '0'}), 
 
                 dmc.ProgressRoot(
 
@@ -231,7 +283,7 @@ def generateNewSignupsPledgesGoals(goal_year):
                 html.Small('Subscription Pledges Only', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
                 html.Small(f'Goal: {gv3_goal:.0%}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
 
-                html.H2(f'{gv3:.2%}', style={'marginTop': '0.5em', 'marginBottom': '0'}), 
+                html.H2(f'{gv3:.2%}', style={'marginTop': '0', 'marginBottom': '0'}), 
 
                 dmc.ProgressRoot(
 
@@ -240,9 +292,50 @@ def generateNewSignupsPledgesGoals(goal_year):
 
                 )
 
+            ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card'),
+
+
+            ## Card to show share of new sign ups that are subscriptions vs one time ##
+            ## Using distinct count of Pledge IDs ##
+            ## Using Pledge Created At Date (Not Pledge Starts Date) - Focused on sign ups ##
+            ## No Goal currently ##
+            dmc.Paper([
+                
+                html.H5('Subscription Signup Ratio', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
+                html.Small('Subscription vs One Time', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
+                html.Small(f'Goal: N/A', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
+
+                html.H2(f'{(gv4_subscription / gv4_total):.1%}', style={'marginTop': '0', 'marginBottom': '0'}), 
+
+                dmc.ProgressRoot(
+
+                    gv4_progress,
+                    size='xl', mb='xs'
+
+                )
+
             ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card')
                             
-        ])
+        ], grow=True, style={'justifyContent':'space-around'}, gap='xl'),
+
+        dmc.Container([
+
+            dmc.Paper([
+                
+                html.H2('Number of Created Pledges', style={'marginBottom': '0.05em'}),
+                html.P('Subscription & One-Time', className='text-muted'),
+                html.Hr(style={'margin': '0.5rem 0'}),
+                html.P('''Displays the number of Pledge sign ups based on OFTW's financial calendar (FY starts in July) on a quarterly basis.
+                       Pledges are split into One-Time and Subscription (Ongoing, Annual, Monthly, etc.)
+                       Focuses on when pledge was signed up, regardless if pledge is currently cancelled / churned.''',
+                       className='text-muted'),
+                
+                dcc.Graph(style={'height': '34vh'}, figure=pledges_by_type_graph())
+
+            
+            ], shadow='lg', withBorder=True, radius='lg', px='xl', className='keys-objs-graph-card')
+
+        ], style={'height': '56vh'}, className='keys-obj-graph-container')
     ]
 
     return return_array
