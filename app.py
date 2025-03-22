@@ -11,6 +11,8 @@ _dash_renderer._set_react_version("18.2.0")
 
 app = Dash(external_stylesheets=dmc.styles.ALL)
 
+
+
 layout = dmc.AppShell(
 
     [
@@ -30,13 +32,31 @@ layout = dmc.AppShell(
 
         ),
 
+        dmc.AppShellNavbar(
+
+            id='main-navbar',
+            children=[
+
+                html.H2('OFTW Performance Dashboard'),
+                html.H4('Main Navigation'),
+                html.Span(html.P('Key Goals & Objectives - Donors & Pledges', style={'margin': '0.4em 0.75em'}), className = 'style-pill-navbar')
+
+            ]
+
+        ),
+
         dmc.AppShellMain(
 
             dmc.Container(generateNewSignupsPledgesGoals(2025),className='objs-key-results-header')
         )
 
-    ], padding='sm',
-    header={'height': 75, 'width': 100, }
+    ], padding='xs',
+    header={'height': 75, 'width': 100},
+    navbar={
+        "width": 300,
+        "breakpoint": "sm",
+        "collapsed": {"mobile": True},
+    }
 
 )
 
