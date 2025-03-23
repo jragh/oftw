@@ -86,31 +86,3 @@ def pledges_by_type_graph():
     return pledges_by_type_distinct_fig
 
 
-
-
-# otp_all_carriers_delay_breakdown_fig = px.bar(data_frame=otp_carriers_summary, x="Month Name", barmode='stack', color='Arrival Delay Classification',
-#                                                   color_discrete_map={'Early > 10 Mins': '#0571b0', 'Early < 10 Mins': '#92c5de', 'Late < 10 Mins': '#f4a582', 'Late > 10 Mins': '#ca0020'},
-#                                                   text_auto='0.3s', 
-#                                                   y="Total Flights",
-#                                                   category_orders={'Arrival Delay Classification': ['Early > 10 Mins', 'Early < 10 Mins', 'Late < 10 Mins', 'Late > 10 Mins']})
-            
-#         otp_all_carriers_delay_breakdown_fig.update_yaxes(showgrid=True, zeroline=False, showline=False, showticklabels=True, tickwidth=2, gridcolor="rgba(30, 63, 102, 0.15)", type="-")
-
-#         otp_all_carriers_delay_breakdown_fig.update_layout(legend={
-#             'orientation':'h',
-#             'yanchor':"bottom",
-#             'y':1.02,
-#             'xanchor': 'center',
-#             'x': 0.5}, 
-#             legend_title_text = '<b>Arrival Delay Category</b>',
-#             xaxis_title=None,
-#             yaxis_title="Total Flights",
-#             yaxis_tickfont={'size': 10},
-            
-#             margin={'l':10, 'r': 10, 't': 10, 'b': 10},
-#             plot_bgcolor='#f9f9f9', paper_bgcolor="#f9f9f9",
-#             hovermode='closest')
-        
-#         otp_all_carriers_delay_breakdown_fig.update_traces(textfont_size=10, marker={"cornerradius":5}, hovertemplate="""<b>%{x}</b><br><br><b>%{data.name}</b>: %{y:.3s}<br><extra></extra>""")
-
-#         otp_all_carriers_delay_breakdown_fig.update_xaxes(categoryarray=months_text, linewidth=2.5, showgrid=False, linecolor='rgb(180, 180, 180)')

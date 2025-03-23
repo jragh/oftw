@@ -9,6 +9,8 @@ from pledges_by_type_graph import pledges_by_type_graph
 
 def generateNewSignupsPledgesGoals(goal_year):
 
+    available_charts = ['Created Pledges By Pledge Type', 'Created Pledges By Portfolio & Frequency']
+
     postgres_uri = os.getenv('POSTGRES_URI_LOCATION')
 
     print(postgres_uri)
@@ -222,18 +224,30 @@ def generateNewSignupsPledgesGoals(goal_year):
     ]
 
     return_array = [
-        html.H2('Key Objectives & Goals', style={'marginBottom': '0', 'fontSize': 'xx-large', 'marginTop': '0'}),
         dmc.Group([
-            
-            html.H4('Pledges & Donors', style={'color': 'grey', 'margin': '0'})
-            ## ,
 
-            # html.Span([
-            #     html.H5('Card Legend', style={'margin': '0', 'fontWeight': 'bold'}),
-            #     dmc.Badge('Goal Progress', color='cyan', radius='xl', size='xs')
-            # ], style={'display': 'flex', 'flexDirection': 'row', 'justifyContent': 'flex-start'})
-            
-        ], justify='space-between', align='center', mb='0.5em'),
+            html.Span([
+                
+                html.H2('Key Objectives & Goals', style={'marginBottom': '0', 'fontSize': 'xx-large', 'marginTop': '0'}),
+                html.H4('Pledges & Donors', style={'color': 'grey', 'margin': '0'})
+                
+            ]),
+
+            ## Chart Selection for Big Section Below ##
+            html.Span([
+                html.H4('Chart Selection', style={'margin': '0', 'color': 'grey'}),
+                dmc.Select(data=available_charts, value=available_charts[0], searchable=True, allowDeselect=False, withAsterisk=True, radius='sm',
+                           w='18dvw',
+                           styles={
+                               'input': {'font-size': '0.75em'},
+                               'value': {'font-size': '0.75em'},
+                               'option': {'font-size': '0.75em'},
+                            },
+                        )
+            ], style={'textAlign': 'right'})
+
+        ], style={'marginBottom': '0.5em'}, justify='space-between'),
+        
         dmc.Group([
             
             ## Card for Total Active Donors ##
@@ -322,7 +336,7 @@ def generateNewSignupsPledgesGoals(goal_year):
 
             dmc.Paper([
                 
-                html.H2('Number of Created Pledges', style={'marginBottom': '0.05em'}),
+                html.H2('Created Pledges By Pledge Type', style={'marginBottom': '0.05em'}),
                 html.P('Subscription & One-Time', className='text-muted'),
                 html.Hr(style={'margin': '0.5rem 0'}),
                 html.P('''Displays the number of Pledge sign ups based on OFTW's financial calendar (FY starts in July) on a quarterly basis.
