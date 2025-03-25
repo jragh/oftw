@@ -1,11 +1,12 @@
 import polars as pl
 import plotly_express as px
-from dash import html, dcc, Input, Output, State, Dash, _dash_renderer, get_asset_url
+from dash import html, dcc, Input, Output, State, Dash, _dash_renderer, get_asset_url, no_update
 import dash_mantine_components as dmc
 
 from flask import Flask, redirect
 
 from new_signups_pledges_goals import generateNewSignupsPledgesGoals
+from callbacks import pledges_donor_page_graph_selector
 
 _dash_renderer._set_react_version("18.2.0")
 
@@ -61,7 +62,7 @@ layout = dmc.AppShell(
 )
 
 app.layout = dmc.MantineProvider(layout)
-
+pledges_donor_page_graph_selector(app)
 
 
 if __name__ == "__main__":

@@ -7,6 +7,7 @@ import os
 
 from pledges_by_type_graph import pledges_by_type_graph
 
+
 def generateNewSignupsPledgesGoals(goal_year):
 
     available_charts = ['Created Pledges By Pledge Type', 'Created Pledges By Portfolio & Frequency']
@@ -231,22 +232,9 @@ def generateNewSignupsPledgesGoals(goal_year):
                 html.H2('Key Objectives & Goals', style={'marginBottom': '0', 'fontSize': 'xx-large', 'marginTop': '0'}),
                 html.H4('Pledges & Donors', style={'color': 'grey', 'margin': '0'})
                 
-            ]),
+            ])
 
-            ## Chart Selection for Big Section Below ##
-            html.Span([
-                html.H4('Chart Selection', style={'margin': '0', 'color': 'grey'}),
-                dmc.Select(data=available_charts, value=available_charts[0], searchable=True, allowDeselect=False, withAsterisk=True, radius='sm',
-                           w='18dvw',
-                           styles={
-                               'input': {'font-size': '0.75em'},
-                               'value': {'font-size': '0.75em'},
-                               'option': {'font-size': '0.75em'},
-                            },
-                        )
-            ], style={'textAlign': 'right'})
-
-        ], style={'marginBottom': '0.5em'}, justify='space-between'),
+        ], style={'marginBottom': '0.5em'}),
         
         dmc.Group([
             
@@ -335,16 +323,40 @@ def generateNewSignupsPledgesGoals(goal_year):
         dmc.Container([
 
             dmc.Paper([
+
+                dmc.Group([
+
+                    html.Span([
+                        html.H2('Created Pledges By Pledge Type', style={'marginBottom': '0.05em'}, id='pledges-donor-graph-title'),
+                        html.P('Subscription & One-Time', className='text-muted', id='pledges-donor-graph-subtitle')
+                    ]),
+
+                    ## Chart Selection for Big Section Below ##
+                    html.Span([
+                        html.H5('Chart Selection', style={'margin': '0', 'fontWeight': 'bold', 'marginTop': '0.8em'}),
+                        dmc.Select(data=available_charts, value=available_charts[0], searchable=True, allowDeselect=False, withAsterisk=True, radius='sm',
+                           w='18dvw',
+                           styles={
+                               'input': {'font-size': '0.75em'},
+                               'value': {'font-size': '0.75em'},
+                               'option': {'font-size': '0.75em'},
+                            }, style={'marginBottom': '0'}
+                            , id='pledges-donors-graph-selection'
+                        )   
+                    ])
+
+                ], style={'marginBottom': '0'}, justify='space-between'),
                 
-                html.H2('Created Pledges By Pledge Type', style={'marginBottom': '0.05em'}),
-                html.P('Subscription & One-Time', className='text-muted'),
+                
                 html.Hr(style={'margin': '0.5rem 0'}),
                 html.P('''Displays the number of Pledge sign ups based on OFTW's financial calendar (FY starts in July) on a quarterly basis.
                        Pledges are split into One-Time and Subscription (Ongoing, Annual, Monthly, etc.)
                        Focuses on when pledge was signed up, regardless if pledge is currently cancelled / churned.''',
-                       className='text-muted'),
+                       className='text-muted', id='pledges-donor-graph-description'),
                 
-                dcc.Graph(style={'height': '34vh'}, figure=pledges_by_type_graph())
+                html.Span([
+                    dcc.Graph(style={'height': '34vh'}, figure=pledges_by_type_graph(), id='pledges-donor-graph-figure')
+                ], id='pledges-donor-graph-figure-span')
 
             
             ], shadow='lg', withBorder=True, radius='lg', px='xl', className='keys-objs-graph-card')

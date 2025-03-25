@@ -6,7 +6,7 @@ import plotly_express as px
 
 import os
 
-def pledges_by_portfolio_frequency_true(beginning_year, end_year):
+def pledges_by_portfolio_frequency_true(beginning_year, end_year, selected_portfolios:list):
 
     postgres_uri = os.getenv('POSTGRES_URI_LOCATION')
 
@@ -67,7 +67,14 @@ def pledges_by_portfolio_frequency_true(beginning_year, end_year):
 
     ## Filtered pledges by portfolio
     ## Will need to add parameter inside function call for callback ##
-    polars_pledges_by_portfolio_frequency = polars_pledges_by_portfolio_frequency.filter(pl.col('portfolio').is_in(portfolio_listing))
+    
+    if selected_portfolios is None and selected_portfolios.strip() == '':
+        
+        polars_pledges_by_portfolio_frequency = polars_pledges_by_portfolio_frequency.filter(pl.col('portfolio').is_in(portfolio_listing))
+
+    else:
+
+        polars_pledges_by_portfolio_frequency = polars_pledges_by_portfolio_frequency.filter(pl.col('portfolio').is_in(portfolio_listing) & pl.col('portfolio').is_in(selected_portfolios))
 
     graph_pledges_by_portfolio_frequency = px.bar(data_frame=polars_pledges_by_portfolio_frequency, y='portfolio', x='pledge_sign_ups', color='frequency',
                                                   orientation='h', barmode='stack', text_auto='0.,3s',
