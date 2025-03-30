@@ -6,6 +6,7 @@ import dash_mantine_components as dmc
 import os
 
 from pledges_by_type_graph import pledges_by_type_graph
+from dash_iconify import DashIconify
 
 
 def generateNewSignupsPledgesGoals(goal_year):
@@ -87,7 +88,9 @@ def generateNewSignupsPledgesGoals(goal_year):
 
     query_pledge_attrition_rate = f'''
 
-        select * from 
+        select *,
+        (("Active Pledges" + "Pre Churned Pledges") - ("Active Pledges" + "Pre Churned Pledges" - ("Churned Pledges" - "Added Pledges"))) / ("Active Pledges" + "Pre Churned Pledges") as "Churn Rate"
+        from 
         public.oftw_churn_rate_fy
         where "Fiscal Year" = {goal_year}
    
@@ -128,8 +131,6 @@ def generateNewSignupsPledgesGoals(goal_year):
 
 
     ## GV1 Section ##
-    polars_goal_churn_rate = polars_goal_churn_rate.with_columns(((pl.col("Churned Pledges") - pl.col("Added Pledges")) / (pl.col("Active Pledges") + pl.col("Pre Churned Pledges"))).alias("Churn Rate"))
-
     gv1 = polars_total_active_donors.select(pl.col('Number of Donors')).item()
     gv1_goal = 1200
 
@@ -331,19 +332,27 @@ def generateNewSignupsPledgesGoals(goal_year):
                         html.P('Subscription & One-Time', className='text-muted', id='pledges-donor-graph-subtitle')
                     ]),
 
-                    ## Chart Selection for Big Section Below ##
+                    ## Chart Selection Now Handled By Left Navigation ##
+                    ## Instead used for Chart Options ##
                     html.Span([
-                        html.H5('Chart Selection', style={'margin': '0', 'fontWeight': 'bold', 'marginTop': '0.8em'}),
-                        dmc.Select(data=available_charts, value=available_charts[0], searchable=True, allowDeselect=False, withAsterisk=True, radius='sm',
-                           w='18dvw',
-                           styles={
-                               'input': {'font-size': '0.75em'},
-                               'value': {'font-size': '0.75em'},
-                               'option': {'font-size': '0.75em'},
-                            }, style={'marginBottom': '0'}
-                            , id='pledges-donors-graph-selection'
+                        dmc.Button(
+                            children=[
+
+                                html.Div([
+                                    html.P('Chart Options', style={'fontSize': '0.85rem', 'margin': '0.5rem 0'}),
+                                    dmc.Badge('0 Options', variant='light', color='gray', style={'marginBottom': '0.5rem'})
+                                ],style={'display': 'flex', 'flexDirection': 'column', 'flex': '1'})
+                            ],
+                            leftSection=DashIconify(icon='clarity:settings-solid', height=24, width=24),
+                            color='#6495ed',
+                            radius='md',
+                            size='md',
+                            variant='filled',
+                            disabled=True,
+                            style={'height': '100%'}
+
                         )   
-                    ])
+                    ], style={'alignSelf': 'flex-end'})
 
                 ], style={'marginBottom': '0'}, justify='space-between'),
                 
