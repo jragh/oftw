@@ -58,7 +58,39 @@ def navbar_selection_html():
                     'root': {'borderRadius': '10px'}
                 }
 
-            )
+            ),
+
+            dmc.NavLink(
+
+                label='Churned Pledges By Fiscal Year',
+                variant='filled',
+                leftSection=DashIconify(icon='clarity:bar-chart-solid', height=24, width=24),
+                className='navlink-option',
+                color='#6495ed',
+                id='navbar-okr-3',
+                styles={
+                    'label': {'fontSize': '.75rem'},
+                    'root': {'borderRadius': '10px'}
+                }
+
+            ),
+
+            dmc.NavLink(
+
+                label='Average Days Before Churn By Fiscal Year',
+                variant='filled',
+                leftSection=DashIconify(icon='clarity:bar-chart-solid', height=24, width=24),
+                className='navlink-option',
+                color='#6495ed',
+                id='navbar-okr-4',
+                styles={
+                    'label': {'fontSize': '.75rem'},
+                    'root': {'borderRadius': '10px'}
+                }
+
+            ),
+
+
 
         ], style={'margin': '2.5rem 0 0.625rem 0', 'padding':'0 1rem'})
 

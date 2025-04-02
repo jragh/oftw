@@ -349,10 +349,14 @@ def generateNewSignupsPledgesGoals(goal_year):
                             size='md',
                             variant='filled',
                             disabled=True,
-                            style={'height': '100%'}
+                            style={'height': '100%'},
+                            id='chart-settings-button-click'
 
-                        )   
-                    ], style={'alignSelf': 'flex-end'})
+                        ),
+
+                        dmc.Modal(id='chart-settings-modal')
+                       
+                    ], style={'alignSelf': 'flex-end'}, id='chart-settings-span')
 
                 ], style={'marginBottom': '0'}, justify='space-between'),
                 
