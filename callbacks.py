@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 
 from pledges_by_type_graph import pledges_by_type_graph
 from pledges_by_portfolio_frequency_graph import pledges_by_portfolio_frequency_true
+from churned_pledges_by_fiscal_year_graph import generate_churned_pledges_by_fiscal_year
 
 
 def pledges_donor_page_graph_selector(app):
@@ -19,6 +20,8 @@ def pledges_donor_page_graph_selector(app):
     navigation_inputs = [Input(i, 'n_clicks') for i in navigation_ids]
 
     navigation_outputs = [Output(i, 'active') for i in navigation_ids]
+
+    print(navigation_inputs)
 
     ## Portfolio Total List ##
     portfolio_listing_full = ['Animal Charity Evaluators',
@@ -93,7 +96,7 @@ def pledges_donor_page_graph_selector(app):
             
             return 'Created Pledges By Pledge Type', 'Subscription & One-Time', description, dcc.Graph(style={'height': '34vh'}, figure=pledges_by_type_graph(), id='pledges-donor-graph-figure')
         
-        if ctx_id_activated == navigation_ids_intermediate[1]:
+        elif ctx_id_activated == navigation_ids_intermediate[1]:
 
             ## Hardcoded Top 8 portfolios, Maybe make this dynamic instead? ##
             starting_portfolio_list = [
@@ -114,6 +117,21 @@ def pledges_donor_page_graph_selector(app):
             subtitle = 'FY2014 - FY2025 (Subscription & One Time)'
 
             return 'Created Pledges By Portfolio & Frequency', subtitle, description, dcc.Graph(style={'height': '34vh'}, figure=pledges_by_portfolio_frequency_true(2014, 2025, starting_portfolio_list), id='pledges-donor-graph-figure-2')
+        
+        elif ctx_id_activated == navigation_ids_intermediate[2]:
+
+            title = 'Churned Pledges By Fiscal Year'
+
+            description = '''Displays the Total Change in Active Pledges between Fiscal Years. 
+            The calculation uses Total Pledges Active at the beginning of Fiscal Year - Total Pledges Active at End of Fiscal Year.
+            This handles pledges that were both started and churned within the same year.'''
+
+            subtitle = 'FY2018 - FY2025 (Subscription Based Pledges)'
+
+            return title, subtitle, description, dcc.Graph(style={'height': '37vh'}, figure=generate_churned_pledges_by_fiscal_year(2018, 2025), id='pledges-donor-graph-figure-3')
+        
+
+
         
         else:
 
@@ -148,7 +166,7 @@ def pledges_donor_page_graph_selector(app):
 
     def navigation_click_button_update(*args):
 
-        navigation_ids_intermediate = ['navbar-okr-1','navbar-okr-2']
+        navigation_ids_intermediate = ['navbar-okr-1','navbar-okr-2', 'navbar-okr-3', 'navbar-okr-4']
 
         ctx = callback_context
 
@@ -254,8 +272,9 @@ def pledges_donor_page_graph_selector(app):
                             maxDropdownHeight=200,
                             leftSectionPointerEvents="none",
                             leftSection=DashIconify(icon="bi-book"),
-                            styles={'pillsList': {'overflow-y': 'scroll', 'maxHeight': '150px'}},
+                            styles={'pillsList': {'overflowY': 'scroll', 'maxHeight': '150px'}},
                             style={'marginBottom': '1.5rem'}
+                            
                         ),
 
                         dmc.Button("Click to set options",
@@ -264,6 +283,72 @@ def pledges_donor_page_graph_selector(app):
                                    leftSection=DashIconify(icon='clarity:check-line', width=24, height=24),
                                    color="rgb(32, 201, 151)",
                                    id='modal-filter-accept-button-2'
+                        )
+
+                    ],
+                    styles={
+                        'body': {'padding': '0 2.5rem 3rem 2.5rem'},
+                        'header': {'paddingTop': '0', 'paddingBottom': '0'}
+                    }
+                )
+
+            ]
+
+            return return_array
+        
+        elif triggered_id == navigation_ids_intermediate[2]:
+
+            return_array = [
+
+                ## Button Displayed to User ##
+                dmc.Button(
+                    children=[
+                        
+                        html.Div([
+                            html.P('Chart Filters', style={'fontSize': '0.85rem', 'margin': '0.5rem 0'}),
+                            dmc.Badge('1 Option', variant='filled', color='#1971c2', style={'marginBottom': '0.5rem'})
+                                ],style={'display': 'flex', 'flexDirection': 'column', 'flex': '1'})
+                            ],
+                            leftSection=DashIconify(icon='clarity:settings-solid', height=24, width=24),
+                            color='#6495ed',
+                            radius='md',
+                            size='md',
+                            variant='filled',
+                            disabled=False,
+                            style={'height': '100%'},
+                            id='chart-settings-button-click'
+
+                ),
+
+                ## Modal for Filtering ##
+                dmc.Modal(
+                    id='chart-settings-modal',
+                    centered=True,
+                    children=[
+                        html.H2('Churned Pledges By Fiscal Year', style={'marginBottom': '0.05em', 'marginTop': '0'}),
+                        html.P('Chart Options', className='text-muted'),
+                        html.Hr(style={'margin': '0.5rem 0'}),
+
+                        ## Fiscal Year Range Selection ##
+                        dmc.YearPickerInput(
+                            type='range',
+                            label='Select Fiscal Year Range',
+                            placeholder='Select a range of years...',
+                            leftSection=DashIconify(icon='clarity:calendar-line', width=16, height=16),
+                            minDate=datetime(2018, 1, 1),
+                            maxDate=datetime(2025, 1, 1),
+                            value=[datetime(2018, 1, 1), datetime(2025, 1, 1)],
+                            id='date-filter-chart-3',
+                            style={'marginBottom': '1.5rem'},
+                            clearable=False
+                        ),
+
+                        dmc.Button("Click to set options",
+                                   fullWidth=True, 
+                                   variant='filled', 
+                                   leftSection=DashIconify(icon='clarity:check-line', width=24, height=24),
+                                   color="rgb(32, 201, 151)",
+                                   id='modal-filter-accept-button-3'
                         )
 
                     ],
@@ -304,6 +389,7 @@ def pledges_donor_page_graph_selector(app):
 
     
     ## Beginning Callbacks for Modals ##
+    ## Created Pledges By Portfolio & Frequency ##
     @app.callback(
 
         Output('pledges-donor-graph-figure-2', 'figure'),
@@ -321,8 +407,12 @@ def pledges_donor_page_graph_selector(app):
 
             return no_update, no_update
         
- 
+        print(ctx.states_list)
+        
         years_selected = [ctx.states_list[0]['value'][0].split('-')[0], ctx.states_list[0]['value'][1].split('-')[0]]
         portfolios_selected = ctx.states_list[1]['value']
 
         return pledges_by_portfolio_frequency_true(years_selected[0], years_selected[1], portfolios_selected), f'''FY{years_selected[0]} - FY{years_selected[1]} (Subscription & One Time)'''
+    
+
+    ## Churned Pledges By Fiscal Year ##

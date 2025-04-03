@@ -68,9 +68,15 @@ def pledges_by_portfolio_frequency_true(beginning_year, end_year, selected_portf
     ## Filtered pledges by portfolio
     ## Will need to add parameter inside function call for callback ##
     
-    if selected_portfolios is None and selected_portfolios.strip() == '':
+    if (selected_portfolios is None and selected_portfolios.strip() == '') or (selected_portfolios == []):
+
+        selected_portfolios = ['OFTW Top Picks'
+                ,'Entire OFTW Portfolio'
+                ,'Custom Portfolio'
+                ,'OFTW Top Pick: Against Malaria Foundation'
+                ,'GiveWell (Maximum Impact Fund)']
         
-        polars_pledges_by_portfolio_frequency = polars_pledges_by_portfolio_frequency.filter(pl.col('portfolio').is_in(portfolio_listing))
+        polars_pledges_by_portfolio_frequency = polars_pledges_by_portfolio_frequency.filter(pl.col('portfolio').is_in(portfolio_listing) & pl.col('portfolio').is_in(selected_portfolios))
 
     else:
 
@@ -78,7 +84,14 @@ def pledges_by_portfolio_frequency_true(beginning_year, end_year, selected_portf
 
     graph_pledges_by_portfolio_frequency = px.bar(data_frame=polars_pledges_by_portfolio_frequency, y='portfolio', x='pledge_sign_ups', color='frequency',
                                                   orientation='h', barmode='stack', text_auto='0.,3s',
-                                                  category_orders={'portfolio': portfolio_listing})
+                                                  category_orders={'portfolio': portfolio_listing,
+                                                                   'frequency': ['Annually', 'Quarterly', 'Monthly', 'Semi-Monthly', 'One-Time', 'Unspecified']},
+                                                color_discrete_map={'Annually': '#1e466e',
+                                                                    'Quarterly': '#376795',
+                                                                    'Monthly': '#528FAD',
+                                                                    'Semi-Monthly': '#72BCD5',
+                                                                    'One-Time': '#FFE6B7',
+                                                                    'Unspecified':'#CDC6B8'})
     
     graph_pledges_by_portfolio_frequency.update_traces(textfont_size=10, marker={'cornerradius':4}, hovertemplate='Will Update this after ngl', textposition='inside')
 
