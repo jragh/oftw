@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 from pledges_by_type_graph import pledges_by_type_graph
 from pledges_by_portfolio_frequency_graph import pledges_by_portfolio_frequency_true
 from churned_pledges_by_fiscal_year_graph import generate_churned_pledges_by_fiscal_year
+from churned_before_payment_graph import generate_churned_before_payment_graph
 
 
 def pledges_donor_page_graph_selector(app):
@@ -120,7 +121,7 @@ def pledges_donor_page_graph_selector(app):
         
         elif ctx_id_activated == navigation_ids_intermediate[2]:
 
-            title = 'Churned Pledges By Fiscal Year'
+            title = 'Change in Active Pledges By Fiscal Year'
 
             description = '''Displays the Total Change in Active Pledges between Fiscal Years. 
             The calculation uses Total Pledges Active at the beginning of Fiscal Year - Total Pledges Active at End of Fiscal Year.
@@ -130,6 +131,17 @@ def pledges_donor_page_graph_selector(app):
 
             return title, subtitle, description, dcc.Graph(style={'height': '37vh'}, figure=generate_churned_pledges_by_fiscal_year(2018, 2025), id='pledges-donor-graph-figure-3')
         
+
+        elif ctx_id_activated == navigation_ids_intermediate[3]:
+
+            title= 'Pledges Churned Before First Payment'
+
+            subtitle = 'FY2018 - FY2025 (Subscription Based Pledges)'
+
+            description = '''Displays the Number of Pledges Started vs Number of Pledges Churned without a single payment, based on the Fiscal Year of the pledge starting.
+            Only includes Subscription based pledges; Churned Pledges are those with status of "Churned Doner" or "Payment Failed".'''
+
+            return title, subtitle, description, dcc.Graph(style={'height': '37.5vh'}, figure=generate_churned_before_payment_graph(2018, 2025), id='pledges-donor-graph-figure-4')
 
 
         
@@ -325,7 +337,7 @@ def pledges_donor_page_graph_selector(app):
                     id='chart-settings-modal',
                     centered=True,
                     children=[
-                        html.H2('Churned Pledges By Fiscal Year', style={'marginBottom': '0.05em', 'marginTop': '0'}),
+                        html.H2('Change in Active Pledges By Fiscal Year', style={'marginBottom': '0.05em', 'marginTop': '0'}),
                         html.P('Chart Options', className='text-muted'),
                         html.Hr(style={'margin': '0.5rem 0'}),
 
@@ -349,6 +361,72 @@ def pledges_donor_page_graph_selector(app):
                                    leftSection=DashIconify(icon='clarity:check-line', width=24, height=24),
                                    color="rgb(32, 201, 151)",
                                    id='modal-filter-accept-button-3'
+                        )
+
+                    ],
+                    styles={
+                        'body': {'padding': '0 2.5rem 3rem 2.5rem'},
+                        'header': {'paddingTop': '0', 'paddingBottom': '0'}
+                    }
+                )
+
+            ]
+
+            return return_array
+        
+        elif triggered_id == navigation_ids_intermediate[3]:
+
+            return_array = [
+
+                ## Button Displayed to User ##
+                dmc.Button(
+                    children=[
+                        
+                        html.Div([
+                            html.P('Chart Filters', style={'fontSize': '0.85rem', 'margin': '0.5rem 0'}),
+                            dmc.Badge('1 Option', variant='filled', color='#1971c2', style={'marginBottom': '0.5rem'})
+                        ],style={'display': 'flex', 'flexDirection': 'column', 'flex': '1'})
+                    ],
+                    leftSection=DashIconify(icon='clarity:settings-solid', height=24, width=24),
+                    color='#6495ed',
+                    radius='md',
+                    size='md',
+                    variant='filled',
+                    disabled=False,
+                    style={'height': '100%'},
+                    id='chart-settings-button-click'
+
+                ),
+
+                ## Modal for Filtering ##
+                dmc.Modal(
+                    id='chart-settings-modal',
+                    centered=True,
+                    children=[
+                        html.H2('Change in Active Pledges By Fiscal Year', style={'marginBottom': '0.05em', 'marginTop': '0'}),
+                        html.P('Chart Options', className='text-muted'),
+                        html.Hr(style={'margin': '0.5rem 0'}),
+
+                        ## Fiscal Year Range Selection ##
+                        dmc.YearPickerInput(
+                            type='range',
+                            label='Select Fiscal Year Range',
+                            placeholder='Select a range of years...',
+                            leftSection=DashIconify(icon='clarity:calendar-line', width=16, height=16),
+                            minDate=datetime(2018, 1, 1),
+                            maxDate=datetime(2025, 1, 1),
+                            value=[datetime(2018, 1, 1), datetime(2025, 1, 1)],
+                            id='date-filter-chart-4',
+                            style={'marginBottom': '1.5rem'},
+                            clearable=False
+                        ),
+
+                        dmc.Button("Click to set options",
+                                   fullWidth=True, 
+                                   variant='filled', 
+                                   leftSection=DashIconify(icon='clarity:check-line', width=24, height=24),
+                                   color="rgb(32, 201, 151)",
+                                   id='modal-filter-accept-button-4'
                         )
 
                     ],
@@ -416,3 +494,80 @@ def pledges_donor_page_graph_selector(app):
     
 
     ## Churned Pledges By Fiscal Year ##
+    @app.callback(
+            Output('pledges-donor-graph-figure-3', 'figure'),
+            Output(component_id='pledges-donor-graph-subtitle', component_property='children', allow_duplicate=True),
+            Input('modal-filter-accept-button-3', 'n_clicks'),
+            State('date-filter-chart-3', 'value'),
+            prevent_initial_call=True)
+    def update_filter_modal_3(n_clicks, fiscal_years):
+
+        ctx = callback_context
+
+        if ('value' not in ctx.states_list[0].keys()):
+
+            return no_update, no_update
+        
+        ## If no years are selected, default to 2018 - 2025 ##
+        if ctx.states_list[0]['value'] == [] or (ctx.states_list[0]['value'][0] is None):
+
+            subtitle = f'''FY2018 - FY2025 (Subscription Based Pledges)'''
+
+            return generate_churned_pledges_by_fiscal_year(2018, 2025), subtitle
+        
+        ## If 1 year is selected only ##
+        if (len(ctx.states_list[0]['value']) == 1) or (ctx.states_list[0]['value'][1] is None):
+
+            first_year = ctx.states_list[0]['value'][0].split('-')[0]
+
+            subtitle = f'''FY{first_year} - FY2025 (Subscription Based Pledges)'''
+
+            return generate_churned_pledges_by_fiscal_year(first_year, 2026), subtitle
+        
+        ## Normal Conditions ##
+        years_selected = [ctx.states_list[0]['value'][0].split('-')[0], ctx.states_list[0]['value'][1].split('-')[0]]
+
+        subtitle = f'''FY{years_selected[0]} - FY{years_selected[1]} (Subscription Based Pledges)'''
+
+        return generate_churned_pledges_by_fiscal_year(years_selected[0], years_selected[1]), subtitle
+    
+
+    ## Pledges Churned Without Any Payment ##
+    @app.callback(
+        
+        Output('pledges-donor-graph-figure-4', 'figure'),
+        Output(component_id='pledges-donor-graph-subtitle', component_property='children', allow_duplicate=True),
+        Input('modal-filter-accept-button-4', 'n_clicks'),
+        State('date-filter-chart-4', 'value'),
+        prevent_initial_call=True)
+    def update_filter_modal_4():
+
+        ctx = callback_context
+
+        if ('value' not in ctx.states_list[0].keys()):
+
+            return no_update, no_update
+        
+        ## If no years are selected, default to 2018 - 2025 ##
+        if ctx.states_list[0]['value'] == [] or (ctx.states_list[0]['value'][0] is None):
+
+            subtitle = f'''FY2018 - FY2025 (Subscription Based Pledges)'''
+
+            return generate_churned_before_payment_graph(2018, 2025), subtitle
+        
+        ## If 1 year is selected only ##
+        if (len(ctx.states_list[0]['value']) == 1) or (ctx.states_list[0]['value'][1] is None):
+
+            first_year = ctx.states_list[0]['value'][0].split('-')[0]
+
+            subtitle = f'''FY{first_year} - FY2025 (Subscription Based Pledges)'''
+
+            return generate_churned_before_payment_graph(first_year, 2025), subtitle
+        
+
+        ## Normal Conditions ##
+        years_selected = [ctx.states_list[0]['value'][0].split('-')[0], ctx.states_list[0]['value'][1].split('-')[0]]
+
+        subtitle = f'''FY{years_selected[0]} - FY{years_selected[1]} (Subscription Based Pledges)'''
+
+        return generate_churned_before_payment_graph(years_selected[0], years_selected[1]), subtitle

@@ -21,8 +21,8 @@ def navbar_selection_html():
             ## Havigation Header for Objectives abd Key Results 
             html.Span([
 
-                DashIconify(icon='clarity:check-circle-solid', height=24, width=24),
-                html.P('Objectives & Key Results'),
+                DashIconify(icon='clarity:check-circle-solid', height=24, width=24, style={'marginRight': '0.5rem'}),
+                html.P('Objectives & Key Results', style={'fontSize': '1.1em', 'fontWeight': '500'}),
                 dmc.Divider(variant='solid', size='xs', color='#dee2e6', orientation='horizontal', style={'flex': '1', 'margin-left': '0.75rem'})
 
             ], className='navigation-header-text'),
@@ -62,7 +62,7 @@ def navbar_selection_html():
 
             dmc.NavLink(
 
-                label='Churned Pledges By Fiscal Year',
+                label='Change in Active Pledges By Fiscal Year',
                 variant='filled',
                 leftSection=DashIconify(icon='clarity:bar-chart-solid', height=24, width=24),
                 className='navlink-option',

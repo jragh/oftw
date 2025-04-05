@@ -100,7 +100,7 @@ def pledges_by_portfolio_frequency_true(beginning_year, end_year, selected_portf
                                plot_bgcolor='#fff', paper_bgcolor="#fff",
                                legend={'font': {'size': 10}, 'orientation':'h'})
     
-    graph_pledges_by_portfolio_frequency.update_legends(yanchor="bottom", y=1.02, xanchor= 'right', x= 0.5, title=None)
+    graph_pledges_by_portfolio_frequency.update_legends(yanchor="bottom", y=1.02, xanchor= 'right', x= 0.7, title=None)
 
     graph_pledges_by_portfolio_frequency.update_yaxes(type='category', title='Portfolio', linewidth=2.5, showgrid=False, 
                                linecolor='rgb(180, 180, 180)', ticksuffix="  ")

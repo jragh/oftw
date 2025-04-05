@@ -44,7 +44,11 @@ def generate_churned_pledges_by_fiscal_year(minYear, maxYear):
     max_pledges_polar = (polars_churned_pledges_by_fiscal_year.select(pl.col("Calculated Pledge Change").abs().max()).item()) * 1.2
     min_pledges_polar = (polars_churned_pledges_by_fiscal_year.select(pl.col("Calculated Pledge Change").min()).item()) * 1.2
 
-    print(max_pledges_polar)
+    category_orders_fys = polars_churned_pledges_by_fiscal_year.select(pl.col("Fiscal Year")).rows(named=True)
+
+    category_orders_fys = sorted([int(i['Fiscal Year']) for i in category_orders_fys])
+
+    print(category_orders_fys)
 
     ## pledges_by_type_distinct_polars.group_by(pl.col("Fiscal Year")).agg(pl.col("Number of Pledge Sign Ups").sum()).select(pl.col("Number of Pledge Sign Ups").max()).item()
 
@@ -55,7 +59,7 @@ def generate_churned_pledges_by_fiscal_year(minYear, maxYear):
                                                    color="PosNeg",
                                                    color_discrete_map={'Positive':'#1AB2D7',
                                                                        'Negative':'#D54217'},
-                                                   custom_data=["Calculated Churn Rate", "Active Pledges Start of Year", "Active Pledges End of Year"],
+                                                   custom_data=["Calculated Churn Rate", "Active Pledges Start of Year", "Active Pledges End of Year", "Calculated Pledge Change Description"],
                                                    text="Calculated Pledge Change"
                                                    )
     
@@ -74,9 +78,11 @@ def generate_churned_pledges_by_fiscal_year(minYear, maxYear):
             yaxis_range=[min_pledges_polar, max_pledges_polar],
             showlegend=False)
     
-    figure_churned_pledges_by_fiscal_year.update_traces(textfont_size=10, marker={"cornerradius":5}, hovertemplate="""<b>FY%{x:.d0}: Churn Rate %{customdata[0]:.3%}</b>""", textposition='outside')
+    figure_churned_pledges_by_fiscal_year.update_traces(textfont_size=10, marker={"cornerradius":5}, 
+                                                        hovertemplate="""<b>FY%{x:.d0}: %{customdata[3]} <br><br>Churn Rate: %{customdata[0]:.3%}</b><br>Active Pledges Start of FY: %{customdata[1]:,.0d}<br>Active Pledges End of FY: %{customdata[2]:,.0d}""",
+                                                        textposition='outside')
 
-    figure_churned_pledges_by_fiscal_year.update_xaxes(linewidth=2.5, showgrid=False, linecolor='rgb(180, 180, 180)')
+    figure_churned_pledges_by_fiscal_year.update_xaxes(linewidth=2.5, showgrid=False, linecolor='rgb(180, 180, 180)', type='category')
 
     return figure_churned_pledges_by_fiscal_year
     
