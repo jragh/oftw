@@ -26,7 +26,7 @@ layout = dmc.AppShell(
 
                 html.Img(src=get_asset_url('OFTW-Secondary-Logo-RGB-White-4k.png'), style={'maxHeight': '3.5rem', 'background': 'cornflowerblue'}),
 
-                html.H2('Hello World To My New App!')
+                html.H2('OFTW Merics Dashboard')
 
 
 

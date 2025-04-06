@@ -12,6 +12,7 @@ from pledges_by_type_graph import pledges_by_type_graph
 from pledges_by_portfolio_frequency_graph import pledges_by_portfolio_frequency_true
 from churned_pledges_by_fiscal_year_graph import generate_churned_pledges_by_fiscal_year
 from churned_before_payment_graph import generate_churned_before_payment_graph
+from cards_goals_pledges_churn import generate_cards_goals_pledges_churn
 
 
 def pledges_donor_page_graph_selector(app):
@@ -571,3 +572,30 @@ def pledges_donor_page_graph_selector(app):
         subtitle = f'''FY{years_selected[0]} - FY{years_selected[1]} (Subscription Based Pledges)'''
 
         return generate_churned_before_payment_graph(years_selected[0], years_selected[1]), subtitle
+    
+
+
+
+
+
+
+    ###### Section for selecting and generating cards for analytics ######
+    @app.callback(Output('keys-objs-head-title', 'children'),
+                  Output('display-cards-group-main', 'children'),
+                  navigation_inputs,
+                  prevent_initial_call=True)
+    def update_app_cards(*args):
+
+        navigation_ids_intermediate = navigation_ids
+
+        ctx = callback_context
+        ctx_id_activated = ctx.triggered[0]['prop_id'].split('.')[0]
+
+        if ctx_id_activated in navigation_ids_intermediate[0:4]:
+
+            print(ctx_id_activated)
+
+            title, cards = generate_cards_goals_pledges_churn(2025)
+
+            return title, cards
+    
