@@ -67,3 +67,25 @@
     align-self: center;
 
 }
+
+
+.navigation-header-text {
+
+    color: #868e96;
+    font-size: 0.8em;
+    line-height: 1.45;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* margin-left: 1rem;
+    margin-right: 1rem; */
+
+}
+
+.navlink-option {
+
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding: 0.35rem 0.5rem;
+
+}
