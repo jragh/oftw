@@ -13,8 +13,6 @@ def generateNewSignupsPledgesGoals(goal_year):
 
     postgres_uri = os.getenv('POSTGRES_URI_LOCATION')
 
-    print(postgres_uri)
-
 
 
     ## Pull Initial Data from Polars ##
