@@ -12,13 +12,13 @@ from pledges_by_type_graph import pledges_by_type_graph
 from pledges_by_portfolio_frequency_graph import pledges_by_portfolio_frequency_true
 from churned_pledges_by_fiscal_year_graph import generate_churned_pledges_by_fiscal_year
 from churned_before_payment_graph import generate_churned_before_payment_graph
-from cards_goals_pledges_churn import generate_cards_goals_pledges_churn
+from cards_goals_pledges_churn import generate_cards_goals_pledges_churn, generate_cards_goals_money_metrics
 
 
 def pledges_donor_page_graph_selector(app):
         
     ## Navigation Consts ##
-    navigation_ids = ['navbar-okr-1','navbar-okr-2', 'navbar-okr-3', 'navbar-okr-4']
+    navigation_ids = ['navbar-okr-1','navbar-okr-2', 'navbar-okr-3', 'navbar-okr-4', 'navbar-mmg-1', 'navbar-mmg-2', 'navbar-mmg-3', 'navbar-mmg-4']
     navigation_inputs = [Input(i, 'n_clicks') for i in navigation_ids]
 
     navigation_outputs = [Output(i, 'active') for i in navigation_ids]
@@ -156,7 +156,7 @@ def pledges_donor_page_graph_selector(app):
 
     def navigation_click_page_update(*args):
 
-        navigation_ids_intermediate = ['navbar-okr-1','navbar-okr-2', 'navbar-okr-3', 'navbar-okr-4']
+        navigation_ids_intermediate = navigation_ids
 
         ctx = callback_context
 
@@ -588,6 +588,8 @@ def pledges_donor_page_graph_selector(app):
 
         navigation_ids_intermediate = navigation_ids
 
+        print(navigation_ids_intermediate)
+
         ctx = callback_context
         ctx_id_activated = ctx.triggered[0]['prop_id'].split('.')[0]
 
@@ -598,4 +600,15 @@ def pledges_donor_page_graph_selector(app):
             title, cards = generate_cards_goals_pledges_churn(2025)
 
             return title, cards
+        
+        elif ctx_id_activated in navigation_ids_intermediate[4:8]:
+
+            print(ctx_id_activated)
+
+            title, cards = generate_cards_goals_money_metrics(2025)
+
+            return title, cards
     
+
+
+

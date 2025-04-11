@@ -234,85 +234,115 @@ def generate_cards_goals_pledges_churn(goal_year):
 
     cards_return_array = [
 
-        ## Card for Total Active Donors ##
-        dmc.Paper([
-                
-            html.H5('Total Active Donors', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
-            html.Small('Active & One Time Donors', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
-            html.Small(f'Goal: {gv1_goal:.0f}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
+        dmc.GridCol([
 
-            html.H2(f'{gv1:,.0f}', style={'marginTop': '0', 'marginBottom': '0'}), 
+            ## Card for Total Active Donors ##
+            dmc.Paper([
 
-            dmc.ProgressRoot(
+                html.H5('Total Active Donors', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
+                html.Small('Active & One Time Donors', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
+                html.Small(f'Goal: {gv1_goal:.0f}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
 
-                gv1_progress,size='xl', mb='xs'
+                html.Span([
 
-            )
+                    html.H2(f'{gv1:,.0f}', style={'marginTop': '0', 'marginBottom': '0'}), 
 
-        ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card'),
+                    dmc.ProgressRoot(
 
-        ## Card for Total Active Pledges ##
-        ## Distinct Count of Active Donor Pledges ##
-        dmc.Paper([
-                
-            html.H5('Total Active Pledges', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
-            html.Small('Active Pledges Only', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
-            html.Small(f'Goal: {gv2_goal:.0f}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
+                        gv1_progress,size='xl', mb='xs'
 
-            html.H2(f'{gv2:,.0f}', style={'marginTop': '0', 'marginBottom': '0'}), 
+                    )
 
-            dmc.ProgressRoot(
+                ], style={'display': 'flex', 'flex-direction': 'column', 'justify-content': 'flex-end', 'height': '100%'})
 
-                gv2_progress,
-                size='xl', mb='xs'
+            ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card')
 
-            )
+        ], span={'base': 12, 'xs':6, 'md': 3}),
 
-        ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card'),
+        dmc.GridCol([
 
+            ## Card for Total Active Pledges ##
+            ## Distinct Count of Active Donor Pledges ##
+            dmc.Paper([
 
-        ## Card for Pledge Attrition Rate ##
-        ## Using Distinct Count of Pledge IDs ##
-        ## (Churned in Fiscal Year - Added in Fiscal Year) / Active Pledges at beginning of Fiscal Year ##
-        ## Goal is 18 Percent ##
-        dmc.Paper([
-                
-            html.H5('Pledge Attrition Rate', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
-            html.Small('Subscription Pledges Only', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
-            html.Small(f'Goal: {gv3_goal:.0%}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
+                html.H5('Total Active Pledges', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
+                html.Small('Active Pledges Only', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
+                html.Small(f'Goal: {gv2_goal:.0f}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
 
-            html.H2(f'{gv3:.2%}', style={'marginTop': '0', 'marginBottom': '0'}), 
+                html.Span([
 
-            dmc.ProgressRoot(
+                    html.H2(f'{gv2:,.0f}', style={'marginTop': '0', 'marginBottom': '0'}), 
 
-                gv3_progress,
-                size='xl', mb='xs'
+                    dmc.ProgressRoot(
 
-            )
+                        gv2_progress,
+                        size='xl', mb='xs'
 
-        ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card'),
+                    )
 
+                ], style={'display': 'flex', 'flex-direction': 'column', 'justify-content': 'flex-end', 'height': '100%'})
 
-        ## Card to show share of new sign ups that are subscriptions vs one time ##
-        ## Using distinct count of Pledge IDs ##
-        ## Using Pledge Created At Date (Not Pledge Starts Date) - Focused on sign ups ##
-        ## No Goal currently ##
-        dmc.Paper([
-                
-            html.H5('Subscription Signup Ratio', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
-            html.Small('Subscription vs One Time', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
-            html.Small(f'Goal: N/A', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
+            ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card')
 
-            html.H2(f'{(gv4_subscription / gv4_total):.1%}', style={'marginTop': '0', 'marginBottom': '0'}), 
+        ], span={'base': 12, 'xs':6, 'md': 3}),
 
-            dmc.ProgressRoot(
+        dmc.GridCol([
 
-                gv4_progress,
-                size='xl', mb='xs'
+            ## Card for Pledge Attrition Rate ##
+            ## Using Distinct Count of Pledge IDs ##
+            ## (Churned in Fiscal Year - Added in Fiscal Year) / Active Pledges at beginning of Fiscal Year ##
+            ## Goal is 18 Percent ##
+            dmc.Paper([
 
-            )
+                html.H5('Pledge Attrition Rate', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
+                html.Small('Subscription Pledges Only', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
+                html.Small(f'Goal: {gv3_goal:.0%}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
 
-        ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card')
+                html.Span([
+
+                    html.H2(f'{gv3:.2%}', style={'marginTop': '0', 'marginBottom': '0'}), 
+
+                    dmc.ProgressRoot(
+
+                        gv3_progress,
+                        size='xl', mb='xs'
+
+                    )
+
+                ], style={'display': 'flex', 'flex-direction': 'column', 'justify-content': 'flex-end', 'height': '100%'})
+
+            ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card')
+
+        ], span={'base': 12, 'xs':6, 'md': 3}),
+
+        dmc.GridCol([
+
+            ## Card to show share of new sign ups that are subscriptions vs one time ##
+            ## Using distinct count of Pledge IDs ##
+            ## Using Pledge Created At Date (Not Pledge Starts Date) - Focused on sign ups ##
+            ## No Goal currently ##
+            dmc.Paper([
+
+                html.H5('Subscription Signup Ratio', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
+                html.Small('Subscription vs One Time', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
+                html.Small(f'Goal: N/A', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
+
+                html.Span([
+
+                    html.H2(f'{(gv4_subscription / gv4_total):.1%}', style={'marginTop': '0', 'marginBottom': '0'}), 
+
+                    dmc.ProgressRoot(
+
+                        gv4_progress,
+                        size='xl', mb='xs'
+
+                    )
+
+                ], style={'display': 'flex', 'flex-direction': 'column', 'justify-content': 'flex-end', 'height': '100%'})
+
+            ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card')
+
+        ], span={'base': 12, 'xs':6, 'md': 3}),
 
     ]
 
@@ -446,7 +476,7 @@ def generate_cards_goals_money_metrics(goal_year):
     	when pledge.frequency in ('Semi-Monthly') and pledge.currency != 'USD' then (pledge.contribution_amount * 24) * curr."CURRENCY RATE FINAL"
     
     end
-    ) as "Total Pledge Amount"
+    )::real as "Total Pledge Amount"
 
     from public.oftw_pledges_raw pledge
     left join curr
@@ -489,7 +519,7 @@ def generate_cards_goals_money_metrics(goal_year):
     where case
     	when DATE_PART('month', cast(opr."date" as date)) >= 7 then DATE_PART('year', cast(opr."date" as date)) + 1
     	else DATE_PART('year', cast(opr."date" as date))
-    end = {goal_year}
+    end in ({goal_year}, {goal_year - 1})
 
     group by 1
     order by 1 
@@ -614,84 +644,114 @@ def generate_cards_goals_money_metrics(goal_year):
 
     cards_return_array = [
 
-        ## Card for Total Money Moved within Fiscal Year ##
-        dmc.Paper([
-                
-            html.H5('Total Money Moved', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
-            html.Small('Active & One Time Pledges', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
-            html.Small(f'Goal: {gv1_goal:.0f}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
+        dmc.GridCol([
 
-            html.H2(f'{gv1:,.0f}', style={'marginTop': '0', 'marginBottom': '0'}), 
+            ## Card for Total Money Moved within Fiscal Year ##
+            dmc.Paper([
 
-            dmc.ProgressRoot(
+                html.H5('Total Money Moved', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
+                html.Small('Active & One Time Pledges', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
+                html.Small(f'Goal: {gv1_goal:.0f}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
 
-                gv1_progress,size='xl', mb='xs'
+                html.Span([
 
-            )
+                    html.H2(f'{gv1:,.0f}', style={'marginTop': '0', 'marginBottom': '0'}), 
 
-        ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card'),
+                    dmc.ProgressRoot(
 
-        ## Card for Total Counterfactuality Money Moved ##
-        dmc.Paper([
-                
-            html.H5('Counterfactuality Money Moved', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
-            html.Small('Active & One Time Pledges', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
-            html.Small(f'Goal: {gv2_goal:.0f}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
+                        gv1_progress,size='xl', mb='xs'
 
-            html.H2(f'{gv2:,.0f}', style={'marginTop': '0', 'marginBottom': '0'}), 
+                    )
 
-            dmc.ProgressRoot(
+                ], style={'display': 'flex', 'flex-direction': 'column', 'justify-content': 'flex-end', 'height': '100%'})
 
-                gv2_progress,
-                size='xl', mb='xs'
+            ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card')
 
-            )
+        ],span={'base': 12, 'xs':6, 'md': 3}, style={'display': 'flex', 'flex-direction': 'column'}),
 
-        ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card'),
+        dmc.GridCol([
 
+            ## Card for Total Counterfactuality Money Moved ##
+            dmc.Paper([
 
-        ## Card for Current Annualized Run Rate ##
-        ## Using Pledged Amounts from Pledges Data Set, Active Donor Pledges Only ##
-        ## (Churned in Fiscal Year - Added in Fiscal Year) / Active Pledges at beginning of Fiscal Year ##
-        ## Goal is $1.2 Million ##
-        dmc.Paper([
-                
-            html.H5('Current Annualized Run Rate', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
-            html.Small('Active Donor Pledges', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
-            html.Small(f'Goal: {gv3_goal:.0%}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
+                html.H5('Counterfactual Money Moved', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
+                html.Small('Active & One Time Pledges', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
+                html.Small(f'Goal: {gv2_goal:.0f}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
 
-            html.H2(f'{gv3:.2%}', style={'marginTop': '0', 'marginBottom': '0'}), 
+                html.Span([
 
-            dmc.ProgressRoot(
+                    html.H2(f'{gv2:,.0f}', style={'marginTop': '0', 'marginBottom': '0'}), 
 
-                gv3_progress,
-                size='xl', mb='xs'
+                    dmc.ProgressRoot(
 
-            )
+                        gv2_progress,
+                        size='xl', mb='xs'
 
-        ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card'),
+                    )
 
+                ], style={'display': 'flex', 'flex-direction': 'column', 'justify-content': 'flex-end', 'height': '100%'})
 
-        ## Card to show share of new sign ups that are subscriptions vs one time ##
-        ## Using distinct count of Pledge IDs ##
-        ## Using Pledge Created At Date (Not Pledge Starts Date) - Focused on sign ups ##
-        ## No Goal currently ##
-        dmc.Paper([
-                
-            html.H5('Subscription Signup Ratio', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
-            html.Small('Subscription vs One Time', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
-            html.Small(f'Goal: N/A', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
+            ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card')
 
-            html.H2(f'{(gv4_current_year / gv4_total):.1%}', style={'marginTop': '0', 'marginBottom': '0'}), 
+        ],span={'base': 12, 'xs':6, 'md': 3}),
 
-            dmc.ProgressRoot(
+        dmc.GridCol([
 
-                gv4_progress,
-                size='xl', mb='xs'
+            ## Card for Current Annualized Run Rate ##
+            ## Using Pledged Amounts from Pledges Data Set, Active Donor Pledges Only ##
+            ## (Churned in Fiscal Year - Added in Fiscal Year) / Active Pledges at beginning of Fiscal Year ##
+            ## Goal is $1.2 Million ##
+            dmc.Paper([
 
-            )
+                html.H5('Current ARR', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
+                html.Small('Active Donor Pledges', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
+                html.Small(f'Goal: {gv3_goal:,}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
 
-        ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card')
+                html.Span([
+
+                    html.H2(f'{gv3:,.0f}', style={'marginTop': '0', 'marginBottom': '0'}), 
+
+                    dmc.ProgressRoot(
+
+                        gv3_progress,
+                        size='xl', mb='xs'
+
+                    )
+
+                ], style={'display': 'flex', 'flex-direction': 'column', 'justify-content': 'flex-end', 'height': '100%'})
+
+            ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card')
+
+        ],span={'base': 12, 'xs':6, 'md': 3}),
+
+        dmc.GridCol([
+
+            ## Card to show share of new sign ups that are subscriptions vs one time ##
+            ## Using distinct count of Pledge IDs ##
+            ## Using Pledge Created At Date (Not Pledge Starts Date) - Focused on sign ups ##
+            ## No Goal currently ##
+            dmc.Paper([
+
+                html.H5('Subscription Signup Ratio', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
+                html.Small('Subscription vs One Time', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
+                html.Small(f'Goal: N/A', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
+
+                html.Span([
+
+                    html.H2(f'{(gv4_current_year / gv4_total):.1%}', style={'marginTop': '0', 'marginBottom': '0'}), 
+
+                    dmc.ProgressRoot(
+
+                        gv4_progress,
+                        size='xl', mb='xs'
+
+                    )
+
+                ], style={'display': 'flex', 'flex-direction': 'column', 'justify-content': 'flex-end', 'height': '100%'})
+
+            ], shadow='lg', withBorder=True, radius='lg', px='md', py='xs', className='keys-objs-head-card')
+
+        ],span={'base': 12, 'xs':6, 'md': 3})
 
     ]
 
