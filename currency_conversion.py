@@ -6,6 +6,8 @@ import polars as pl
 
 import os
 
+import traceback
+
 
 def get_historical_exchange_rates(start_date="2020-01-01", end_date=None):
 
@@ -35,24 +37,37 @@ def get_historical_exchange_rates(start_date="2020-01-01", end_date=None):
 
             currency_total.append(df_filled)
 
-            # conversion_rates = {
-                
-            #     'USD': 1.0,
-            #     'GBP': polars_df_filled['DEXUSUK'],
-            #     'CAD': 1/polars_df_filled['DEXCAUS'],  # Inverting for division
-            #     'AUD': polars_df_filled['DEXUSAL'],
-            #     'EUR': polars_df_filled['DEXUSEU'],
-            #     'SGD': 1/polars_df_filled['DEXSIUS'],  # Inverting for division
-            #     'CHF': 1/polars_df_filled['DEXSZUS']   # Inverting for division
-
-            # }
-
-            # polars_df_filled = polars_df_filled.with_columns()
-
         final_pandas_currency = pd.concat(currency_total, ignore_index=True)
 
         #### Polars Conversion, Write to postgres database ####
         polars_final_currency = pl.from_dataframe(final_pandas_currency)
+
+        #### Setting up Currency Short for join onto other tables ####
+        currency_short = {
+
+            'DEXUSUK': 'GBP',
+            'DEXCAUS': 'CAD',
+            'DEXUSAL': 'AUD',
+            'DEXUSEU': 'EUR',
+            'DEXSIUS': 'SGD',
+            'DEXSZUS': 'CHF'
+
+        }
+
+        polars_final_currency = polars_final_currency.with_columns(pl.col('CURRENCY').replace_strict(currency_short).alias('CURRENCY SHORT'))
+
+        #### Conversion Rates Dictionary ####
+        # conversion_rates = {
+        #     'USD': 1.0,
+        #     'GBP': polars_final_currency['CURRENCY RATE'],
+        #     'CAD': 1/polars_final_currency['CURRENCY RATE'],  # Inverting for division
+        #     'AUD': polars_final_currency['CURRENCY RATE'],
+        #     'EUR': polars_final_currency['CURRENCY RATE'],
+        #     'SGD': 1/polars_final_currency['CURRENCY RATE'],  # Inverting for division
+        #     'CHF': 1/polars_final_currency['CURRENCY RATE']   # Inverting for division
+        # }
+
+        ## polars_final_currency = polars_final_currency.with_columns(pl.col('CURRENCY SHORT').replace(conversion_rates).alias("CURRENCY RATE FINAL"))
 
         polars_final_currency.write_database(table_name='oftw_currency_conversion',
                                              connection=postgres_uri,
@@ -60,6 +75,6 @@ def get_historical_exchange_rates(start_date="2020-01-01", end_date=None):
                                              if_table_exists='replace')
 
     except Exception as e:
-        print("Error fetching data:", e)
+        print("Error fetching data:", traceback.format_exc())
 
-get_historical_exchange_rates("2014-03-01", "2025-02-28")
+get_historical_exchange_rates("2014-03-01", "2025-03-01")

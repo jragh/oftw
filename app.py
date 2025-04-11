@@ -38,7 +38,7 @@ layout = dmc.AppShell(
         dmc.AppShellNavbar(
 
             id='main-navbar',
-            children=navbar_selection_html()
+            children=dmc.ScrollArea(navbar_selection_html())
 
         ),
 
