@@ -13,6 +13,7 @@ from pledges_by_portfolio_frequency_graph import pledges_by_portfolio_frequency_
 from churned_pledges_by_fiscal_year_graph import generate_churned_pledges_by_fiscal_year
 from churned_before_payment_graph import generate_churned_before_payment_graph
 from cards_goals_pledges_churn import generate_cards_goals_pledges_churn, generate_cards_goals_money_metrics
+from money_moved_annual_monthly_graph import generate_money_moved_annual_graph
 
 
 def pledges_donor_page_graph_selector(app):
@@ -82,7 +83,7 @@ def pledges_donor_page_graph_selector(app):
                   prevent_initial_call=True)
     def navigation_click_charts_update(*args):
 
-        navigation_ids_intermediate = ['navbar-okr-1','navbar-okr-2', 'navbar-okr-3', 'navbar-okr-4']
+        navigation_ids_intermediate = navigation_ids
         ctx = callback_context
         ctx_id_activated = ctx.triggered[0]['prop_id'].split('.')[0]
 
@@ -143,6 +144,17 @@ def pledges_donor_page_graph_selector(app):
             Only includes Subscription based pledges; Churned Pledges are those with status of "Churned Doner" or "Payment Failed".'''
 
             return title, subtitle, description, dcc.Graph(style={'height': '37.5vh'}, figure=generate_churned_before_payment_graph(2018, 2025), id='pledges-donor-graph-figure-4')
+        
+
+        elif ctx_id_activated == navigation_ids_intermediate[4]:
+
+            title= 'Payment Recieved By Fiscal Year'
+
+            subtitle = 'FY2018 - FY2025 (One - Time & Subscription Based Payments)'
+
+            description = '''Displays the Total Payments Recieved in USD in the specified Fiscal Year, split by Payment Frequency. Includes both One-Time and Subscription payments.'''
+
+            return title, subtitle, description, dcc.Graph(style={'height': '37.5vh'}, figure=generate_money_moved_annual_graph(2018, 2025), id='pledges-donor-graph-figure-5')
 
 
         
