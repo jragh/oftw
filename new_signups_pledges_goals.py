@@ -388,7 +388,7 @@ def generateNewSignupsPledgesGoals(goal_year):
                        className='text-muted', id='pledges-donor-graph-description'),
                 
                 html.Span([
-                    dcc.Graph(style={'height': '34vh'}, figure=pledges_by_type_graph(), id='pledges-donor-graph-figure')
+                    dcc.Graph(style={'height': '35vh'}, figure=pledges_by_type_graph(), id='pledges-donor-graph-figure')
                 ], id='pledges-donor-graph-figure-span')
 
             

@@ -44,7 +44,8 @@ layout = dmc.AppShell(
 
         dmc.AppShellMain(
 
-            dmc.Container(generateNewSignupsPledgesGoals(2025),className='objs-key-results-header')
+            dmc.Container(generateNewSignupsPledgesGoals(2025),className='objs-key-results-header'),
+            style={'background-color': '#fafafa'}
         )
 
     ], padding='xs',

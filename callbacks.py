@@ -13,7 +13,7 @@ from pledges_by_portfolio_frequency_graph import pledges_by_portfolio_frequency_
 from churned_pledges_by_fiscal_year_graph import generate_churned_pledges_by_fiscal_year
 from churned_before_payment_graph import generate_churned_before_payment_graph
 from cards_goals_pledges_churn import generate_cards_goals_pledges_churn, generate_cards_goals_money_metrics
-from money_moved_annual_monthly_graph import generate_money_moved_annual_graph
+from money_moved_annual_monthly_graph import generate_money_moved_annual_graph, generate_arpp_annual_graph
 
 
 def pledges_donor_page_graph_selector(app):
@@ -156,6 +156,18 @@ def pledges_donor_page_graph_selector(app):
 
             return title, subtitle, description, dcc.Graph(style={'height': '37.5vh'}, figure=generate_money_moved_annual_graph(2018, 2025), id='pledges-donor-graph-figure-5')
 
+
+        elif ctx_id_activated == navigation_ids_intermediate[6]:
+
+            title = 'Average Revenue Per Pledge (Annual)'
+
+            subtitle = 'FY2018 - FY2025 (One - Time & Subscription Based Payments)'
+
+            description = '''Displays how much revenue, on average we can expect to generate per pledge.
+            Calculated by dividing Total Payment Revenue by Total Distinct Pledges within a given fiscal year. 
+            Split by One Time & Subscription Pledges.'''
+
+            return title, subtitle, description, dcc.Graph(style={'height': '37.5vh'}, figure=generate_arpp_annual_graph(2018, 2025), id='pledges-donor-graph-figure-7')
 
         
         else:
