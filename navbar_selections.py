@@ -126,7 +126,7 @@ def navbar_selection_html():
                 label = 'Total Payments Recieved (Monthly)',
                 variant='filled',
                 className='navlink-option',
-                leftSection=DashIconify(icon='clarity:bar-chart-solid', height=24, width=24),
+                leftSection=DashIconify(icon='clarity:line-chart-solid', height=24, width=24),
                 color='#6495ed',
                 id='navbar-mmg-2',
                 styles={

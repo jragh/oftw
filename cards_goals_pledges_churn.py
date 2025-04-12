@@ -568,7 +568,7 @@ def generate_cards_goals_money_metrics(goal_year):
 
     ## gv2_section ##
     gv2 = polars_counter_money_moved.select(pl.col("Counterfactuality Payment Amount")).item()
-    gv2_goal = 1200000
+    gv2_goal = 1260000
 
     gv2_progress = []
 

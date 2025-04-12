@@ -13,7 +13,7 @@ from pledges_by_portfolio_frequency_graph import pledges_by_portfolio_frequency_
 from churned_pledges_by_fiscal_year_graph import generate_churned_pledges_by_fiscal_year
 from churned_before_payment_graph import generate_churned_before_payment_graph
 from cards_goals_pledges_churn import generate_cards_goals_pledges_churn, generate_cards_goals_money_metrics
-from money_moved_annual_monthly_graph import generate_money_moved_annual_graph, generate_arpp_annual_graph
+from money_moved_annual_monthly_graph import generate_money_moved_annual_graph, generate_arpp_annual_graph, generate_money_moved_monthly_graph, generate_arpp_monthly_graph
 
 
 def pledges_donor_page_graph_selector(app):
@@ -155,6 +155,19 @@ def pledges_donor_page_graph_selector(app):
             description = '''Displays the Total Payments Recieved in USD in the specified Fiscal Year, split by Payment Frequency. Includes both One-Time and Subscription payments.'''
 
             return title, subtitle, description, dcc.Graph(style={'height': '37.5vh'}, figure=generate_money_moved_annual_graph(2018, 2025), id='pledges-donor-graph-figure-5')
+        
+
+        elif ctx_id_activated == navigation_ids_intermediate[5]:
+
+            title= 'Payment Recieved By Fiscal Year & Month'
+
+            subtitle = 'FY2024 - FY2025 (One - Time & Subscription Based Payments)'
+
+            description = '''Displays the Total Payments Recieved in USD in the specified Fiscal Year, split by Payment Frequency. 
+            Includes both One-Time and Subscription payments.
+            Fiscal Year Starts in July, So July is Month 1, August is Month 2, etc.'''
+
+            return title, subtitle, description, dcc.Graph(style={'height': '37.5vh'}, figure=generate_money_moved_monthly_graph(2024, 2025), id='pledges-donor-graph-figure-6')
 
 
         elif ctx_id_activated == navigation_ids_intermediate[6]:
@@ -168,7 +181,18 @@ def pledges_donor_page_graph_selector(app):
             Split by One Time & Subscription Pledges.'''
 
             return title, subtitle, description, dcc.Graph(style={'height': '37.5vh'}, figure=generate_arpp_annual_graph(2018, 2025), id='pledges-donor-graph-figure-7')
+        
+        elif ctx_id_activated == navigation_ids_intermediate[7]:
 
+            title = 'Average Revenue Per Pledge (Monthly)'
+
+            subtitle = 'FY2024 - FY2025 (Subscription Payments Only)'
+
+            description = '''Displays how much revenue, on average we can expect to generate per pledge.
+            Calculated by dividing Total Payment Revenue by Total Distinct Pledges within a given Fiscal Year & Month. 
+            Subscription Based Pledges only, Filter by Payment Platform in the options.'''
+
+            return title, subtitle, description, dcc.Graph(style={'height': '37.5vh'}, figure=generate_arpp_monthly_graph(2024, 2025, []), id='pledges-donor-graph-figure-8')
         
         else:
 
@@ -203,7 +227,7 @@ def pledges_donor_page_graph_selector(app):
 
     def navigation_click_button_update(*args):
 
-        navigation_ids_intermediate = ['navbar-okr-1','navbar-okr-2', 'navbar-okr-3', 'navbar-okr-4']
+        navigation_ids_intermediate = navigation_ids
 
         ctx = callback_context
 
@@ -465,6 +489,72 @@ def pledges_donor_page_graph_selector(app):
 
             return return_array
         
+        elif triggered_id == navigation_ids_intermediate[7]:
+
+            return_array = [
+
+                ## Button displayed to the end user ##
+                dmc.Button(
+                    children=[
+                        
+                        html.Div([
+                            html.P('Chart Filters', style={'fontSize': '0.85rem', 'margin': '0.5rem 0'}),
+                            dmc.Badge('2 Options', variant='filled', color='#1971c2', style={'marginBottom': '0.5rem'})
+                        ],style={'display': 'flex', 'flexDirection': 'column', 'flex': '1'})
+                    ],
+                    leftSection=DashIconify(icon='clarity:settings-solid', height=24, width=24),
+                    color='#6495ed',
+                    radius='md',
+                    size='md',
+                    variant='filled',
+                    disabled=False,
+                    style={'height': '100%'},
+                    id='chart-settings-button-click'
+
+                ),
+
+                ## Modal for Filtering ##
+                dmc.Modal(
+                    id='chart-settings-modal',
+                    centered=True,
+                    children=[
+                        # html.H2('Change in Active Pledges By Fiscal Year', style={'marginBottom': '0.05em', 'marginTop': '0'}),
+                        # html.P('Chart Options', className='text-muted'),
+                        # html.Hr(style={'margin': '0.5rem 0'}),
+
+                        # ## Fiscal Year Range Selection ##
+                        # dmc.YearPickerInput(
+                        #     type='range',
+                        #     label='Select Fiscal Year Range',
+                        #     placeholder='Select a range of years...',
+                        #     leftSection=DashIconify(icon='clarity:calendar-line', width=16, height=16),
+                        #     minDate=datetime(2018, 1, 1),
+                        #     maxDate=datetime(2025, 1, 1),
+                        #     value=[datetime(2018, 1, 1), datetime(2025, 1, 1)],
+                        #     id='date-filter-chart-4',
+                        #     style={'marginBottom': '1.5rem'},
+                        #     clearable=False
+                        # ),
+
+                        # dmc.Button("Click to set options",
+                        #            fullWidth=True, 
+                        #            variant='filled', 
+                        #            leftSection=DashIconify(icon='clarity:check-line', width=24, height=24),
+                        #            color="rgb(32, 201, 151)",
+                        #            id='modal-filter-accept-button-4'
+                        # )
+
+                    ],
+                    styles={
+                        'body': {'padding': '0 2.5rem 3rem 2.5rem'},
+                        'header': {'paddingTop': '0', 'paddingBottom': '0'}
+                    }
+                )
+
+            ]
+
+            return return_array
+        
         else:
 
             return no_update
@@ -565,7 +655,7 @@ def pledges_donor_page_graph_selector(app):
         Input('modal-filter-accept-button-4', 'n_clicks'),
         State('date-filter-chart-4', 'value'),
         prevent_initial_call=True)
-    def update_filter_modal_4():
+    def update_filter_modal_4(n_clicks, fiscal_years):
 
         ctx = callback_context
 
