@@ -489,7 +489,217 @@ def pledges_donor_page_graph_selector(app):
 
             return return_array
         
+        elif triggered_id == navigation_ids_intermediate[4]:
+
+            return_array = [
+
+                ## Button displayed to the end user ##
+                dmc.Button(
+                    children=[
+                        
+                        html.Div([
+                            html.P('Chart Filters', style={'fontSize': '0.85rem', 'margin': '0.5rem 0'}),
+                            dmc.Badge('1 Option', variant='filled', color='#1971c2', style={'marginBottom': '0.5rem'})
+                        ],style={'display': 'flex', 'flexDirection': 'column', 'flex': '1'})
+                    ],
+                    leftSection=DashIconify(icon='clarity:settings-solid', height=24, width=24),
+                    color='#6495ed',
+                    radius='md',
+                    size='md',
+                    variant='filled',
+                    disabled=False,
+                    style={'height': '100%'},
+                    id='chart-settings-button-click'
+
+                ),
+
+                ## Modal for Filtering ##
+                dmc.Modal(
+                    id='chart-settings-modal',
+                    centered=True,
+                    children=[
+                        html.H2('Change in Total Payments Recieved (Annual)', style={'marginBottom': '0.05em', 'marginTop': '0'}),
+                        html.P('Chart Options', className='text-muted'),
+                        html.Hr(style={'margin': '0.5rem 0'}),
+
+                        ## Fiscal Year Range Selection ##
+                        dmc.YearPickerInput(
+                            type='range',
+                            label='Select Fiscal Year Range',
+                            placeholder='Select a range of Fiscal Years...',
+                            leftSection=DashIconify(icon='clarity:calendar-line', width=16, height=16),
+                            minDate=datetime(2018, 1, 1),
+                            maxDate=datetime(2025, 1, 1),
+                            value=[datetime(2018, 1, 1), datetime(2025, 1, 1)],
+                            id='date-filter-chart-5',
+                            style={'marginBottom': '1.5rem'},
+                            clearable=False
+                        ),
+
+                        dmc.Button("Click to set options",
+                                   fullWidth=True, 
+                                   variant='filled', 
+                                   leftSection=DashIconify(icon='clarity:check-line', width=24, height=24),
+                                   color="rgb(32, 201, 151)",
+                                   id='modal-filter-accept-button-5'
+                        )
+
+                    ],
+                    styles={
+                        'body': {'padding': '0 2.5rem 3rem 2.5rem'},
+                        'header': {'paddingTop': '0', 'paddingBottom': '0'}
+                    }
+                )
+
+            ]
+
+            return return_array
+        
+        elif triggered_id == navigation_ids_intermediate[5]:
+
+            return_array = [
+
+                ## Button displayed to the end user ##
+                dmc.Button(
+                    children=[
+                        
+                        html.Div([
+                            html.P('Chart Filters', style={'fontSize': '0.85rem', 'margin': '0.5rem 0'}),
+                            dmc.Badge('1 Option', variant='filled', color='#1971c2', style={'marginBottom': '0.5rem'})
+                        ],style={'display': 'flex', 'flexDirection': 'column', 'flex': '1'})
+                    ],
+                    leftSection=DashIconify(icon='clarity:settings-solid', height=24, width=24),
+                    color='#6495ed',
+                    radius='md',
+                    size='md',
+                    variant='filled',
+                    disabled=False,
+                    style={'height': '100%'},
+                    id='chart-settings-button-click'
+
+                ),
+
+                ## Modal for Filtering ##
+                dmc.Modal(
+                    id='chart-settings-modal',
+                    centered=True,
+                    children=[
+                        html.H2('Change in Total Payments Recieved (Monthly)', style={'marginBottom': '0.05em', 'marginTop': '0'}),
+                        html.P('Chart Options', className='text-muted'),
+                        html.Hr(style={'margin': '0.5rem 0'}),
+
+                        ## Fiscal Year Range Selection ##
+                        dmc.YearPickerInput(
+                            type='range',
+                            label='Select Fiscal Year Range',
+                            placeholder='Select a range of Fiscal Years...',
+                            leftSection=DashIconify(icon='clarity:calendar-line', width=16, height=16),
+                            minDate=datetime(2018, 1, 1),
+                            maxDate=datetime(2025, 1, 1),
+                            value=[datetime(2024, 1, 1), datetime(2025, 1, 1)],
+                            id='date-filter-chart-6',
+                            style={'marginBottom': '1.5rem'},
+                            clearable=False
+                        ),
+
+                        dmc.Button("Click to set options",
+                                   fullWidth=True, 
+                                   variant='filled', 
+                                   leftSection=DashIconify(icon='clarity:check-line', width=24, height=24),
+                                   color="rgb(32, 201, 151)",
+                                   id='modal-filter-accept-button-6'
+                        )
+
+                    ],
+                    styles={
+                        'body': {'padding': '0 2.5rem 3rem 2.5rem'},
+                        'header': {'paddingTop': '0', 'paddingBottom': '0'}
+                    }
+                )
+
+            ]
+
+            return return_array
+
+        
+        elif triggered_id == navigation_ids_intermediate[6]:
+
+            return_array = [
+
+                ## Button displayed to the end user ##
+                dmc.Button(
+                    children=[
+                        
+                        html.Div([
+                            html.P('Chart Filters', style={'fontSize': '0.85rem', 'margin': '0.5rem 0'}),
+                            dmc.Badge('1 Option', variant='filled', color='#1971c2', style={'marginBottom': '0.5rem'})
+                        ],style={'display': 'flex', 'flexDirection': 'column', 'flex': '1'})
+                    ],
+                    leftSection=DashIconify(icon='clarity:settings-solid', height=24, width=24),
+                    color='#6495ed',
+                    radius='md',
+                    size='md',
+                    variant='filled',
+                    disabled=False,
+                    style={'height': '100%'},
+                    id='chart-settings-button-click'
+
+                ),
+
+                ## Modal for Filtering ##
+                dmc.Modal(
+                    id='chart-settings-modal',
+                    centered=True,
+                    children=[
+                        html.H2('Change in Average Revenue Per Pledge (Annual)', style={'marginBottom': '0.05em', 'marginTop': '0'}),
+                        html.P('Chart Options', className='text-muted'),
+                        html.Hr(style={'margin': '0.5rem 0'}),
+
+                        ## Fiscal Year Range Selection ##
+                        dmc.YearPickerInput(
+                            type='range',
+                            label='Select Fiscal Year Range',
+                            placeholder='Select a range of Fiscal Years...',
+                            leftSection=DashIconify(icon='clarity:calendar-line', width=16, height=16),
+                            minDate=datetime(2018, 1, 1),
+                            maxDate=datetime(2025, 1, 1),
+                            value=[datetime(2018, 1, 1), datetime(2025, 1, 1)],
+                            id='date-filter-chart-7',
+                            style={'marginBottom': '1.5rem'},
+                            clearable=False
+                        ),
+
+                        dmc.Button("Click to set options",
+                                   fullWidth=True, 
+                                   variant='filled', 
+                                   leftSection=DashIconify(icon='clarity:check-line', width=24, height=24),
+                                   color="rgb(32, 201, 151)",
+                                   id='modal-filter-accept-button-7'
+                        )
+
+                    ],
+                    styles={
+                        'body': {'padding': '0 2.5rem 3rem 2.5rem'},
+                        'header': {'paddingTop': '0', 'paddingBottom': '0'}
+                    }
+                )
+
+            ]
+
+            return return_array
+        
         elif triggered_id == navigation_ids_intermediate[7]:
+
+            payment_platform_selection_list = [
+
+                'Donational'
+                ,'Off Platform'
+                ,'NFG'
+                ,'Benevity'
+                ,'Squarespace'
+                ,'Gift Aid'
+                
+            ]
 
             return_array = [
 
@@ -518,31 +728,48 @@ def pledges_donor_page_graph_selector(app):
                     id='chart-settings-modal',
                     centered=True,
                     children=[
-                        # html.H2('Change in Active Pledges By Fiscal Year', style={'marginBottom': '0.05em', 'marginTop': '0'}),
-                        # html.P('Chart Options', className='text-muted'),
-                        # html.Hr(style={'margin': '0.5rem 0'}),
+                        html.H2('Change in Annual Revenue Per Pledge (Monthly)', style={'marginBottom': '0.05em', 'marginTop': '0'}),
+                        html.P('Chart Options', className='text-muted'),
+                        html.Hr(style={'margin': '0.5rem 0'}),
 
-                        # ## Fiscal Year Range Selection ##
-                        # dmc.YearPickerInput(
-                        #     type='range',
-                        #     label='Select Fiscal Year Range',
-                        #     placeholder='Select a range of years...',
-                        #     leftSection=DashIconify(icon='clarity:calendar-line', width=16, height=16),
-                        #     minDate=datetime(2018, 1, 1),
-                        #     maxDate=datetime(2025, 1, 1),
-                        #     value=[datetime(2018, 1, 1), datetime(2025, 1, 1)],
-                        #     id='date-filter-chart-4',
-                        #     style={'marginBottom': '1.5rem'},
-                        #     clearable=False
-                        # ),
+                        ## Fiscal Year Range Selection ##
+                        dmc.YearPickerInput(
+                            type='range',
+                            label='Select Fiscal Year Range',
+                            placeholder='Select a range of years...',
+                            leftSection=DashIconify(icon='clarity:calendar-line', width=16, height=16),
+                            minDate=datetime(2018, 1, 1),
+                            maxDate=datetime(2025, 1, 1),
+                            value=[datetime(2024, 1, 1), datetime(2025, 1, 1)],
+                            id='date-filter-chart-8',
+                            style={'marginBottom': '1.5rem'},
+                            clearable=False
+                        ),
 
-                        # dmc.Button("Click to set options",
-                        #            fullWidth=True, 
-                        #            variant='filled', 
-                        #            leftSection=DashIconify(icon='clarity:check-line', width=24, height=24),
-                        #            color="rgb(32, 201, 151)",
-                        #            id='modal-filter-accept-button-4'
-                        # )
+                        dmc.MultiSelect(
+                            hidePickedOptions=True,
+                            searchable=True,
+                            description='''Select Payment Platforms to be viewed.''',
+                            label='Payment Platform Selection',
+                            clearable=False,
+                            id='payment-filter-chart-8',
+                            value=[],
+                            data=payment_platform_selection_list,
+                            maxDropdownHeight=200,
+                            leftSectionPointerEvents="none",
+                            leftSection=DashIconify(icon="bi-book"),
+                            styles={'pillsList': {'overflowY': 'scroll', 'maxHeight': '150px'}},
+                            style={'marginBottom': '1.5rem'}
+                            
+                        ),
+
+                        dmc.Button("Click to set options",
+                                   fullWidth=True, 
+                                   variant='filled', 
+                                   leftSection=DashIconify(icon='clarity:check-line', width=24, height=24),
+                                   color="rgb(32, 201, 151)",
+                                   id='modal-filter-accept-button-8'
+                        )
 
                     ],
                     styles={
@@ -687,10 +914,176 @@ def pledges_donor_page_graph_selector(app):
 
         return generate_churned_before_payment_graph(years_selected[0], years_selected[1]), subtitle
     
+    ## Total Payments Recieved Annual (One-Time & Subscriptions) ##
+    @app.callback(
+            Output('pledges-donor-graph-figure-5', 'figure'),
+            Output(component_id='pledges-donor-graph-subtitle', component_property='children', allow_duplicate=True),
+            Input('modal-filter-accept-button-5', 'n_clicks'),
+            State('date-filter-chart-5', 'value'),
+            supress_ballback_exceptions=True,
+            prevent_initial_call=True
+            
+    )
+    def update_filter_modal_5(n_clicks, fiscal_years):
+
+        ctx = callback_context
+
+        if ('value' not in ctx.states_list[0].keys()):
+
+            return no_update, no_update
+        
+        ## If no years are selected, default to 2018 - 2025 ##
+        if ctx.states_list[0]['value'] == [] or (ctx.states_list[0]['value'][0] is None):
+
+            subtitle = f'''FY2018 - FY2025 (One-Time & Subscription Payments)'''
+
+            return generate_money_moved_annual_graph(2018, 2025), subtitle
+        
+        ## If 1 year is selected only ##
+        if (len(ctx.states_list[0]['value']) == 1) or (ctx.states_list[0]['value'][1] is None):
+
+            first_year = ctx.states_list[0]['value'][0].split('-')[0]
+
+            subtitle = f'''FY{first_year} - FY2025 (One-Time & Subscription Payments)'''
+
+            return generate_money_moved_annual_graph(first_year, 2025), subtitle
+        
+        ## Normal Conditions ##
+        years_selected = [ctx.states_list[0]['value'][0].split('-')[0], ctx.states_list[0]['value'][1].split('-')[0]]
+
+        subtitle = f'''FY{years_selected[0]} - FY{years_selected[1]} (One-Time & Subscription Payments)'''
+
+        return generate_money_moved_annual_graph(years_selected[0], years_selected[1]), subtitle
+    
+
+    ## Revenue Generated By All Pledges Monthly (One-Time & Subscription Payments) ##
+    @app.callback(
+            Output('pledges-donor-graph-figure-6', 'figure'),
+            Output(component_id='pledges-donor-graph-subtitle', component_property='children', allow_duplicate=True),
+            Input('modal-filter-accept-button-6', 'n_clicks'),
+            State('date-filter-chart-6', 'value'),
+            supress_ballback_exceptions=True,
+            prevent_initial_call=True
+            
+    )
+    def update_filter_modal_6(n_clicks, fiscal_years):
+
+        ctx = callback_context
+
+        if ('value' not in ctx.states_list[0].keys()):
+
+            return no_update, no_update
+        
+        ## If no years are selected, default to 2018 - 2025 ##
+        if ctx.states_list[0]['value'] == [] or (ctx.states_list[0]['value'][0] is None):
+
+            subtitle = f'''FY2024 - FY2025 (One - Time & Subscription Payments)'''
+
+            return generate_money_moved_monthly_graph(2024, 2025), subtitle
+        
+        ## If 1 year is selected only ##
+        if (len(ctx.states_list[0]['value']) == 1) or (ctx.states_list[0]['value'][1] is None):
+
+            first_year = ctx.states_list[0]['value'][0].split('-')[0]
+
+            subtitle = f'''FY{first_year} - FY2025 (One-Time & Subscription Payments)'''
+
+            return generate_money_moved_monthly_graph(first_year, 2025), subtitle
+        
+        ## Normal Conditions ##
+        years_selected = [ctx.states_list[0]['value'][0].split('-')[0], ctx.states_list[0]['value'][1].split('-')[0]]
+
+        subtitle = f'''FY{years_selected[0]} - FY{years_selected[1]} (One-Time & Subscription Payments)'''
+
+        return generate_money_moved_monthly_graph(years_selected[0], years_selected[1]), subtitle
+
+    ## Average Revenue Per Pledge Annual (One-Time & Subscriptions) ##
+    @app.callback(
+            Output('pledges-donor-graph-figure-7', 'figure'),
+            Output(component_id='pledges-donor-graph-subtitle', component_property='children', allow_duplicate=True),
+            Input('modal-filter-accept-button-7', 'n_clicks'),
+            State('date-filter-chart-7', 'value'),
+            supress_ballback_exceptions=True,
+            prevent_initial_call=True
+            
+    )
+    def update_filter_modal_7(n_clicks, fiscal_years):
+
+        ctx = callback_context
+
+        if ('value' not in ctx.states_list[0].keys()):
+
+            return no_update, no_update
+        
+        ## If no years are selected, default to 2018 - 2025 ##
+        if ctx.states_list[0]['value'] == [] or (ctx.states_list[0]['value'][0] is None):
+
+            subtitle = f'''FY2018 - FY2025 (One-Time & Subscription Payments)'''
+
+            return generate_arpp_annual_graph(2018, 2025), subtitle
+        
+        ## If 1 year is selected only ##
+        if (len(ctx.states_list[0]['value']) == 1) or (ctx.states_list[0]['value'][1] is None):
+
+            first_year = ctx.states_list[0]['value'][0].split('-')[0]
+
+            subtitle = f'''FY{first_year} - FY2025 (One-Time & Subscription Payments)'''
+
+            return generate_arpp_annual_graph(first_year, 2025), subtitle
+        
+        ## Normal Conditions ##
+        years_selected = [ctx.states_list[0]['value'][0].split('-')[0], ctx.states_list[0]['value'][1].split('-')[0]]
+
+        subtitle = f'''FY{years_selected[0]} - FY{years_selected[1]} (One-Time & Subscription Payments)'''
+
+        return generate_arpp_annual_graph(years_selected[0], years_selected[1]), subtitle
+    
 
 
+    ## Average Revenue Per Pledge Monthly Subscription Only ##
+    @app.callback(
+            Output('pledges-donor-graph-figure-8', 'figure'),
+            Output(component_id='pledges-donor-graph-subtitle', component_property='children', allow_duplicate=True),
+            Input('modal-filter-accept-button-8', 'n_clicks'),
+            State('date-filter-chart-8', 'value'),
+            State('payment-filter-chart-8', 'value'),
+            supress_ballback_exceptions=True,
+            prevent_initial_call=True)
 
 
+    def update_filter_modal_8(n_clicks, fiscal_years, payment_platforms):
+
+        ctx = callback_context
+
+        if ('value' not in ctx.states_list[0].keys()):
+
+            return no_update, no_update
+        
+        ## Payments do not need to be altered in if else ladder ##
+        payments_selected = ctx.states_list[1]['value']
+        
+        ## If no years are selected, default to 2018 - 2025 ##
+        if ctx.states_list[0]['value'] == [] or (ctx.states_list[0]['value'][0] is None):
+
+            subtitle = f'''FY2024 - FY2025 (Subscription Payments Only)'''
+
+            return generate_arpp_monthly_graph(2024, 2025, payments_selected), subtitle
+        
+        ## If 1 year is selected only ##
+        if (len(ctx.states_list[0]['value']) == 1) or (ctx.states_list[0]['value'][1] is None):
+
+            first_year = ctx.states_list[0]['value'][0].split('-')[0]
+
+            subtitle = f'''FY{first_year} - FY2025 (Subscription Payments Only)'''
+
+            return generate_arpp_monthly_graph(first_year, 2025, payments_selected), subtitle
+        
+        ## Normal Conditions ##
+        years_selected = [ctx.states_list[0]['value'][0].split('-')[0], ctx.states_list[0]['value'][1].split('-')[0]]
+
+        subtitle = f'''FY{years_selected[0]} - FY{years_selected[1]} (Subscription Payments Only)'''
+
+        return generate_arpp_monthly_graph(years_selected[0], years_selected[1], payments_selected), subtitle
 
 
     ###### Section for selecting and generating cards for analytics ######

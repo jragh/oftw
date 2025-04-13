@@ -12,7 +12,9 @@ from navbar_selections import navbar_selection_html
 
 _dash_renderer._set_react_version("18.2.0")
 
-app = Dash(external_stylesheets=dmc.styles.ALL)
+server = Flask(__name__)
+
+app = Dash(__name__, external_stylesheets=dmc.styles.ALL, server=server)
 
 
 

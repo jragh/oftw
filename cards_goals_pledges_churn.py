@@ -651,11 +651,11 @@ def generate_cards_goals_money_metrics(goal_year):
 
                 html.H5('Total Money Moved', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
                 html.Small('Active & One Time Pledges', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
-                html.Small(f'Goal: {gv1_goal:.0f}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
+                html.Small(f'Goal: ${gv1_goal:,.0f}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
 
                 html.Span([
 
-                    html.H2(f'{gv1:,.0f}', style={'marginTop': '0', 'marginBottom': '0'}), 
+                    html.H2(f'${gv1:,.0f}', style={'marginTop': '0', 'marginBottom': '0'}), 
 
                     dmc.ProgressRoot(
 
@@ -676,11 +676,11 @@ def generate_cards_goals_money_metrics(goal_year):
 
                 html.H5('Counterfactual Money Moved', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
                 html.Small('Active & One Time Pledges', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
-                html.Small(f'Goal: {gv2_goal:.0f}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
+                html.Small(f'Goal: ${gv2_goal:,.0f}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
 
                 html.Span([
 
-                    html.H2(f'{gv2:,.0f}', style={'marginTop': '0', 'marginBottom': '0'}), 
+                    html.H2(f'${gv2:,.0f}', style={'marginTop': '0', 'marginBottom': '0'}), 
 
                     dmc.ProgressRoot(
 
@@ -705,11 +705,11 @@ def generate_cards_goals_money_metrics(goal_year):
 
                 html.H5('Current ARR', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
                 html.Small('Active Donor Pledges', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
-                html.Small(f'Goal: {gv3_goal:,}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
+                html.Small(f'Goal: ${gv3_goal:,}', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
 
                 html.Span([
 
-                    html.H2(f'{gv3:,.0f}', style={'marginTop': '0', 'marginBottom': '0'}), 
+                    html.H2(f'${gv3:,.0f}', style={'marginTop': '0', 'marginBottom': '0'}), 
 
                     dmc.ProgressRoot(
 
@@ -732,13 +732,13 @@ def generate_cards_goals_money_metrics(goal_year):
             ## No Goal currently ##
             dmc.Paper([
 
-                html.H5('Subscription Signup Ratio', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
-                html.Small('Subscription vs One Time', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
-                html.Small(f'Goal: N/A', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
+                html.H5('1Yr APRR Change', style={'fontWeight': 'bold', 'marginTop': '0', 'marginBottom': '0.1em'}),
+                html.Small('Current vs Previous Fiscal Year', style={'fontSize': '65%', 'fontWeight': 'bold', 'color': 'grey'}),
+                html.Small(f'All Payments, Goal: N/A', style={'fontSize': '65%', 'fontWeight': '500', 'color': 'grey', 'fontStyle': 'italic'}),
 
                 html.Span([
 
-                    html.H2(f'{(gv4_current_year / gv4_total):.1%}', style={'marginTop': '0', 'marginBottom': '0'}), 
+                    html.H2(f'{((gv4_current_year - gv4_previous_year) / gv4_previous_year):.1%}', style={'marginTop': '0', 'marginBottom': '0'}), 
 
                     dmc.ProgressRoot(
 
