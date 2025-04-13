@@ -11,52 +11,16 @@ def generate_churned_before_payment_graph(start_year, end_year):
 
     query_churned_before_payment = f'''
 
-    with churns as (
-    select
-    case
-    	when date_part('month', cast("pledge_starts_at" as date)) >= 7 then date_part('year', cast("pledge_starts_at" as date)) + 1
-    	else date_part('year', cast("pledge_starts_at" as date))
-    end as "Fiscal Year",
-    count(distinct pledge_id) "Pledges Churned Without Payment",
-    avg(
-    	case 
-    		when cast(pledge_starts_at as date) > cast(pledge_ended_at as date) then 0 
-    		else cast(pledge_ended_at as date) - cast(pledge_starts_at as date)
-    	end
-    ) as "Average Days Before Churn With No Payment"
-    from public.oftw_pledges_raw
-    where frequency != 'One-Time'
-    and pledge_status in ('Churned donor', 'Payment failure')
-    and pledge_id not in (select pledge_id from public.oftw_payments_raw where pledge_id is not null)
-    group by 1),
+    SELECT "Fiscal Year", 
+    "Total Pledges Starting", 
+    "Pledges Churned Without Payment", 
+    "Average Days Before Churn With No Payment", 
+    "Pct Churned Without Payment"
+    FROM public.oftw_churns_before_payments
 
-    totals as (
+    where "Fiscal Year" >= {start_year} and "Fiscal Year" <= {end_year}
 
-    select
-    case
-    	when date_part('month', cast("pledge_starts_at" as date)) >= 7 then date_part('year', cast("pledge_starts_at" as date)) + 1
-    	else date_part('year', cast("pledge_starts_at" as date))
-    end as "Fiscal Year",
-    count(distinct pledge_id) "Total Pledges Starting"
-    from public.oftw_pledges_raw
-    where frequency != 'One-Time'
-    group by 1
-
-    )
-
-    select a."Fiscal Year"::real, 
-    a."Total Pledges Starting"::real, 
-    b."Pledges Churned Without Payment"::real,
-    b."Average Days Before Churn With No Payment"::real,
-    ((b."Pledges Churned Without Payment" * 1.00) / (a."Total Pledges Starting" * 1.00))::real as "Pct Churned Without Payment"
-
-    from totals a
-    inner join churns b
-    on a."Fiscal Year" = b."Fiscal Year"
-
-    where a."Fiscal Year" >= {start_year} and a."Fiscal Year" <= {end_year}
-
-    order by a."Fiscal Year" asc
+    order by "Fiscal Year" asc
 
     '''
 

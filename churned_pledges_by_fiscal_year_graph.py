@@ -12,27 +12,22 @@ def generate_churned_pledges_by_fiscal_year(minYear, maxYear):
 
     ## Query to pull churned pledges by fiscal year ##
     query_churned_pledges_by_fiscal_year = f'''
-    
-    with a as (
-    select *,
-    (("Active Pledges" + "Pre Churned Pledges") - ("Active Pledges" + "Pre Churned Pledges" - ("Churned Pledges" - "Added Pledges"))) / ("Active Pledges" + "Pre Churned Pledges") as "Calculated Churn Rate",
-    ("Active Pledges" + "Pre Churned Pledges" - ("Churned Pledges" - "Added Pledges")) - ("Active Pledges" + "Pre Churned Pledges") as "Calculated Pledge Change",
-    ("Active Pledges" + "Pre Churned Pledges") as "Active Pledges Start of Year",
-    ("Active Pledges" + "Pre Churned Pledges" - ("Churned Pledges" - "Added Pledges")) as "Active Pledges End of Year"
-    from 
-    public.oftw_churn_rate_fy
-    where "Fiscal Year" >= {str(minYear)} and "Fiscal Year" <= {str(maxYear)})
 
-    select a.*,
-    case 
-    	when a."Calculated Pledge Change" < 0 then CONCAT('Lost ', cast(a."Calculated Pledge Change" * -1 as varchar), ' Pledges')
-    	else CONCAT('Gained ', cast(a."Calculated Pledge Change" as varchar), ' Pledges')
-    end as "Calculated Pledge Change Description",
-    case
-	    when a."Calculated Pledge Change" < 0 then 'Negative'
-	    else 'Positive'
-    end as "PosNeg"
-    from a
+    SELECT "Fiscal Year", 
+    "Fiscal Year Start", 
+    "Fiscal Year End", 
+    "Active Pledges", 
+    "Churned Pledges", 
+    "Pre Churned Pledges", 
+    "Added Pledges", 
+    "Calculated Churn Rate", 
+    "Calculated Pledge Change", 
+    "Active Pledges Start of Year", 
+    "Active Pledges End of Year", 
+    "Calculated Pledge Change Description", 
+    "PosNeg"
+    FROM public.oftw_churned_pledges_by_fiscal_year
+    where "Fiscal Year" >= {str(minYear)} and "Fiscal Year" <= {str(maxYear)}
     
     '''
 
