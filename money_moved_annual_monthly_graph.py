@@ -13,58 +13,10 @@ def generate_money_moved_annual_graph(start_year, end_year):
     ## Query to grab annual money moved data split by Frequency Type ##
     query_money_moved_annual = f'''
 
-    with curr as (
-    select *,
-    case
-    	when "CURRENCY SHORT" in ('GBP', 'AUD', 'EUR') then "CURRENCY RATE"
-    	when "CURRENCY SHORT" in ('CAD', 'SGD', 'CHF') then (1.00 / "CURRENCY RATE")
-    end as "CURRENCY RATE FINAL"
-    from public.oftw_currency_conversion
-    ),
-
-    pledge_freq as (
-    select distinct pledge_id, frequency from public.oftw_pledges_raw
-
-    ),
-
-    annual_info as (
-
-    select 
-    case
-    	when DATE_PART('month', cast(opr."date" as date)) >= 7 then DATE_PART('year', cast(opr."date" as date)) + 1
-    	else DATE_PART('year', cast(opr."date" as date))
-    end as "Fiscal Year",
-
-    case 
-    	when pledge.frequency = 'One-Time' then 'One-Time'
-    	else 'Subscription'
-    end as "Payment Frequency",
-
-    SUM(case
-    	when opr.currency = 'USD' then opr.amount
-    	else opr."amount" * curr."CURRENCY RATE FINAL"
-    end) as "Payment Amount",
-
-    count(*) "Number of Payments"
-
-    from public.oftw_payments_raw opr 
-    left join curr
-    on cast(opr."date" as DATE) = cast(curr."DATE" as DATE) and opr.currency = curr."CURRENCY SHORT"
-
-    left join pledge_freq pledge
-    on opr.pledge_id = pledge.pledge_id 
-
-    group by 1, 2)
-
-    select "Fiscal Year",
-    CONCAT('FY', cast("Fiscal Year" as varchar)) as "Fiscal Year Named",
-    row_number() over (order by "Fiscal Year", "Payment Frequency") as "Fiscal Year Sorted",
-    "Payment Frequency",
-    "Payment Amount",
-    "Number of Payments"
-    from annual_info
+    SELECT "Fiscal Year", "Fiscal Year Named", "Fiscal Year Sorted", "Payment Frequency", "Payment Amount", "Number of Payments"
+    FROM public.oftw_money_moved_annual
     where "Fiscal Year" >= {start_year} and "Fiscal Year" <= {end_year}
-    order by "Fiscal Year", "Payment Frequency"
+    order by "Fiscal Year", "Payment Frequency" 
 
     '''
 
@@ -122,66 +74,8 @@ def generate_money_moved_monthly_graph(start_year, end_year):
 
     query_money_moved_monthly = f'''
 
-    with curr as (
-    select *,
-    case
-    	when "CURRENCY SHORT" in ('GBP', 'AUD', 'EUR') then "CURRENCY RATE"
-    	when "CURRENCY SHORT" in ('CAD', 'SGD', 'CHF') then (1.00 / "CURRENCY RATE")
-    end as "CURRENCY RATE FINAL"
-    from public.oftw_currency_conversion
-    ),
-
-    pledge_freq as (
-    select distinct pledge_id, frequency from public.oftw_pledges_raw
-
-    )
-
-    ,monthly_info as (
-
-    select 
-    case
-    	when DATE_PART('month', cast(opr."date" as date)) >= 7 then DATE_PART('year', cast(opr."date" as date)) + 1
-    	else DATE_PART('year', cast(opr."date" as date))
-    end as "Fiscal Year",
-
-    case 
-    	when DATE_PART('month', cast(opr."date" as date)) >= 7 then DATE_PART('month', cast(opr."date" as date)) - 6
-    	else DATE_PART('month', cast(opr."date" as date)) + 6
-    end as "Fiscal Month",
-
-    DATE_PART('month', cast(opr."date" as date)) as "Calendar Month",
-
-
-    case 
-    	when pledge.frequency = 'One-Time' then 'One-Time'
-    	else 'Subscription'
-    end as "Payment Frequency",
-
-    SUM(case
-    	when opr.currency = 'USD' then opr.amount
-    	else opr."amount" * curr."CURRENCY RATE FINAL"
-    end) as "Payment Amount",
-
-    count(*) "Number of Payments"
-
-    from public.oftw_payments_raw opr 
-    left join curr
-    on cast(opr."date" as DATE) = cast(curr."DATE" as DATE) and opr.currency = curr."CURRENCY SHORT"
-
-    left join pledge_freq pledge
-    on opr.pledge_id = pledge.pledge_id 
-
-    group by 1, 2, 3, 4
-    )
-
-    select "Fiscal Year",
-    "Fiscal Month",
-    CONCAT('FY', cast("Fiscal Year" as varchar), '-', cast("Fiscal Month" as varchar)) as "Fiscal Year Named",
-    row_number() over (order by "Fiscal Year", "Fiscal Month", "Payment Frequency") as "Fiscal Year Sorted",
-    "Payment Frequency",
-    "Payment Amount",
-    "Number of Payments"
-    from monthly_info
+    SELECT "Fiscal Year", "Fiscal Month", "Fiscal Year Named", "Fiscal Year Sorted", "Payment Frequency", "Payment Amount", "Number of Payments"
+    FROM public.oftw_money_moved_monthly
     where "Fiscal Year" >= {start_year} and "Fiscal Year" <= {end_year}
     order by "Fiscal Year", "Fiscal Month", "Payment Frequency"
 
@@ -240,70 +134,11 @@ def generate_arpp_annual_graph(start_year, end_year):
     ## Query to pull annual ARPP calculation split by payment frequency ##
     query_arpp_annual_graph = f'''
 
-    with curr as (
-    select *,
-    case
-    	when "CURRENCY SHORT" in ('GBP', 'AUD', 'EUR') then "CURRENCY RATE"
-    	when "CURRENCY SHORT" in ('CAD', 'SGD', 'CHF') then (1.00 / "CURRENCY RATE")
-    end as "CURRENCY RATE FINAL"
-    from public.oftw_currency_conversion
-    ),
+    SELECT "Fiscal Year", "Fiscal Year Named", "Fiscal Year Sorted", "Payment Frequency", "Total Payment Amount", "Number of Paying Pledges"
+    FROM public.oftw_aprr_annual
 
-    pledge_freq as (
-    select distinct pledge_id, frequency from public.oftw_pledges_raw
+    where "Fiscal Year" >= {start_year} and "Fiscal Year" <= {end_year}
 
-    ),
-
-    annual_aprr as (
-
-    select 
-    case
-    	when DATE_PART('month', cast(opr."date" as date)) >= 7 then DATE_PART('year', cast(opr."date" as date)) + 1
-    	else DATE_PART('year', cast(opr."date" as date))
-    end as "Fiscal Year",
-
-    case 
-    	when pledge.frequency = 'One-Time' then 'One-Time'
-    	else 'Subscription'
-    end as "Payment Frequency",
-
-    SUM(case
-    	when opr.currency = 'USD' then opr.amount
-    	else opr."amount" * curr."CURRENCY RATE FINAL"
-    end) as "Total Payment Amount",
-
-    count(distinct opr.pledge_id) "Number of Paying Pledges"
-
-
-    from public.oftw_payments_raw opr 
-    left join curr
-    on cast(opr."date" as DATE) = cast(curr."DATE" as DATE) and opr.currency = curr."CURRENCY SHORT"
-
-    left join pledge_freq pledge
-    on opr.pledge_id = pledge.pledge_id 
-
-    where case
-    	when DATE_PART('month', cast(opr."date" as date)) >= 7 then DATE_PART('year', cast(opr."date" as date)) + 1
-    	else DATE_PART('year', cast(opr."date" as date))
-    end >= {start_year}
-
-    and 
-
-    case
-    	when DATE_PART('month', cast(opr."date" as date)) >= 7 then DATE_PART('year', cast(opr."date" as date)) + 1
-    	else DATE_PART('year', cast(opr."date" as date))
-    end <= {end_year} 
-
-    group by 1, 2)
-
-    select "Fiscal Year",
-    CONCAT('FY', cast("Fiscal Year" as varchar)) as "Fiscal Year Named",
-    row_number() over (order by "Fiscal Year", "Payment Frequency") as "Fiscal Year Sorted",
-    "Payment Frequency",
-    "Total Payment Amount",
-    "Number of Paying Pledges"
-
-    from annual_aprr
     order by "Fiscal Year", "Payment Frequency"
 
     '''
@@ -367,80 +202,11 @@ def generate_arpp_monthly_graph(start_year, end_year, payment_platforms):
     ## Query for Monthly APRR Pull ##
     query_arpp_monthly_graph = f'''
 
-    with curr as (
-    select *,
-    case
-    	when "CURRENCY SHORT" in ('GBP', 'AUD', 'EUR') then "CURRENCY RATE"
-    	when "CURRENCY SHORT" in ('CAD', 'SGD', 'CHF') then (1.00 / "CURRENCY RATE")
-    end as "CURRENCY RATE FINAL"
-    from public.oftw_currency_conversion
-    ),
+    SELECT "Fiscal Year", "Fiscal Month", "Fiscal Year Named", "Fiscal Year Sorted", "Payment Platform", "Total Payment Amount", "Number of Paying Pledges"
+    FROM public.oftw_aprr_monthly
 
-    pledge_freq as (
-    select distinct pledge_id, frequency from public.oftw_pledges_raw
+    where "Fiscal Year" >= {start_year} and "Fiscal Year" <= {end_year}
 
-    ),
-
-    monthly_aprr as (
-
-    select 
-    case
-    	when DATE_PART('month', cast(opr."date" as date)) >= 7 then DATE_PART('year', cast(opr."date" as date)) + 1
-    	else DATE_PART('year', cast(opr."date" as date))
-    end as "Fiscal Year",
-
-    case 
-    	when DATE_PART('month', cast(opr."date" as date)) >= 7 then DATE_PART('month', cast(opr."date" as date)) - 6
-    	else DATE_PART('month', cast(opr."date" as date)) + 6
-    end as "Fiscal Month",
-
-    DATE_PART('month', cast(opr."date" as date)) as "Calendar Month",
-
-    payment_platform as "Payment Platform",
-
-    SUM(case
-    	when opr.currency = 'USD' then opr.amount
-    	else opr."amount" * curr."CURRENCY RATE FINAL"
-    end) as "Total Payment Amount",
-
-    count(distinct opr.pledge_id) "Number of Paying Pledges"
-
-
-    from public.oftw_payments_raw opr 
-    left join curr
-    on cast(opr."date" as DATE) = cast(curr."DATE" as DATE) and opr.currency = curr."CURRENCY SHORT"
-
-    left join pledge_freq pledge
-    on opr.pledge_id = pledge.pledge_id 
-
-    where case
-    	when DATE_PART('month', cast(opr."date" as date)) >= 7 then DATE_PART('year', cast(opr."date" as date)) + 1
-    	else DATE_PART('year', cast(opr."date" as date))
-    end >= {start_year}
-
-    and 
-
-    case
-    	when DATE_PART('month', cast(opr."date" as date)) >= 7 then DATE_PART('year', cast(opr."date" as date)) + 1
-    	else DATE_PART('year', cast(opr."date" as date))
-    end <= {end_year} 
-
-    and case 
-    	when pledge.frequency = 'One-Time' then 'One-Time'
-    	else 'Subscription'
-    end = 'Subscription'
-
-    group by 1, 2, 3, 4)
-
-    select "Fiscal Year",
-    "Fiscal Month",
-    CONCAT('FY', cast("Fiscal Year" as varchar), '-', cast("Fiscal Month" as varchar)) as "Fiscal Year Named",
-    row_number() over (order by "Fiscal Year", "Fiscal Month", "Payment Platform") as "Fiscal Year Sorted",
-    "Payment Platform",
-    "Total Payment Amount",
-    "Number of Paying Pledges"
-
-    from monthly_aprr
     order by "Fiscal Year", "Fiscal Month", "Payment Platform"
 
     '''

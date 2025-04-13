@@ -16,65 +16,15 @@ def generate_cards_goals_pledges_churn(goal_year):
     ## Queries ##
     query_new_sign_ups_total = '''
 
-    with a as (
-
-        select case 
-        	when date_part('month', cast(pledge_starts_at as date)) >= 7 then date_part('year', cast(pledge_starts_at as date)) + 1
-        	else date_part('year', cast(pledge_starts_at as date))
-        end as "Fiscal Year",
-
-        case
-        	when date_part('month', cast(pledge_starts_at as date)) >= 7 then date_part('month', cast(pledge_starts_at as date)) - 6
-        	else date_part('month', cast(pledge_starts_at as date)) + 6 
-        end as "Fiscal Month",
-
-        cast(pledge_starts_at as date),
-        pledge_status, 
-        case when pledge_status = 'One-Time' then 'One-Time' else 'Subscription' end as "Pledge Type",
-        pledge_id,
-        donor_id
-
-        from public.oftw_pledges_raw opr 
-        where pledge_status not in ('ERROR', 'Payment failure')
-        and date_part('year', cast(pledge_starts_at as date)) >= 2015
-
-        )
-
-        select cast(COUNT(distinct donor_id) as real) as "Number of Donors"
-        from a
-        where (pledge_status in ('Active donor', 'One-Time'))
+    SELECT "Number of Donors"
+    FROM public.oftw_active_donor_card
     
     '''
 
     query_active_pledges_total = '''
 
-    with a as (
-
-        select case 
-        	when date_part('month', cast(pledge_starts_at as date)) >= 7 then date_part('year', cast(pledge_starts_at as date)) + 1
-        	else date_part('year', cast(pledge_starts_at as date))
-        end as "Fiscal Year",
-
-        case
-        	when date_part('month', cast(pledge_starts_at as date)) >= 7 then date_part('month', cast(pledge_starts_at as date)) - 6
-        	else date_part('month', cast(pledge_starts_at as date)) + 6 
-        end as "Fiscal Month",
-
-        cast(pledge_starts_at as date),
-        pledge_status, 
-        case when pledge_status = 'One-Time' then 'One-Time' else 'Subscription' end as "Pledge Type",
-        pledge_id,
-        donor_id
-
-        from public.oftw_pledges_raw opr 
-        where pledge_status not in ('ERROR', 'Payment failure')
-        and date_part('year', cast(pledge_starts_at as date)) >= 2015
-
-        )
-
-        select cast(COUNT(distinct pledge_id) as real) as "Number of Pledges"
-        from a
-        where (pledge_status in ('Active donor'))
+    SELECT "Number of Pledges"
+    FROM public.oftw_active_pledges_card
     
     '''
 
@@ -91,21 +41,9 @@ def generate_cards_goals_pledges_churn(goal_year):
 
     query_pledge_frequency_share = f'''
 
-            select
-        case 
-        	when date_part('month', cast(pledge_created_at as date)) >= 7 then date_part('year', cast(pledge_created_at as date)) + 1
-        	else date_part('year', cast(pledge_created_at as date)) 
-        end as "Fiscal Year",
-
-        case when pledge_status = 'One-Time' then 'One-Time' else 'Subscription' end as "Pledge Type",
-
-        count(distinct pledge_id) "Created Pledges"
-        from public.oftw_pledges_raw
-        where case 
-        	when date_part('month', cast(pledge_created_at as date)) >= 7 then date_part('year', cast(pledge_created_at as date)) + 1
-        	else date_part('year', cast(pledge_created_at as date)) 
-        end = {goal_year}
-        group by 1, 2
+        SELECT "Fiscal Year", "Pledge Type", "Created Pledges"
+        FROM public.oftw_pledge_frequency_share_card
+        where "Fiscal Year" = {goal_year}
 
     '''
 
@@ -356,79 +294,17 @@ def generate_cards_goals_money_metrics(goal_year):
     ## Query Total Money Moved ##
     query_money_moved_total = f'''
 
-    with curr as (
-    select *,
-    case
-    	when "CURRENCY SHORT" in ('GBP', 'AUD', 'EUR') then "CURRENCY RATE"
-    	when "CURRENCY SHORT" in ('CAD', 'SGD', 'CHF') then (1.00 / "CURRENCY RATE")
-    end as "CURRENCY RATE FINAL"
-    from public.oftw_currency_conversion
-    )
-    
-    select 
-    case
-    	when DATE_PART('month', cast(opr."date" as date)) >= 7 then DATE_PART('year', cast(opr."date" as date)) + 1
-    	else DATE_PART('year', cast(opr."date" as date))
-    end as "Fiscal Year",
-    
-    
-    SUM(case
-    	when opr.currency = 'USD' then opr.amount
-    	else opr."amount" * curr."CURRENCY RATE FINAL"
-    end) as "Payment Amount",
-    
-    count(*) "Number of Payments"
-    
-    from public.oftw_payments_raw opr 
-    left join curr
-    on cast(opr."date" as DATE) = cast(curr."DATE" as DATE) and opr.currency = curr."CURRENCY SHORT"
-    
-    where case
-    	when DATE_PART('month', cast(opr."date" as date)) >= 7 then DATE_PART('year', cast(opr."date" as date)) + 1
-    	else DATE_PART('year', cast(opr."date" as date))
-    end = {goal_year}
-    
-    group by 1
-    order by 1
+    SELECT "Fiscal Year", "Payment Amount", "Number of Payments"
+    FROM public.oftw_money_moved_total_card
+    where "Fiscal Year" = {goal_year}
     
     '''
 
     query_counter_money_moved_total = f'''
-    
-    with curr as (
-    select *,
-    case
-    	when "CURRENCY SHORT" in ('GBP', 'AUD', 'EUR') then "CURRENCY RATE"
-    	when "CURRENCY SHORT" in ('CAD', 'SGD', 'CHF') then (1.00 / "CURRENCY RATE")
-    end as "CURRENCY RATE FINAL"
-    from public.oftw_currency_conversion
-    )
 
-    select 
-    case
-    	when DATE_PART('month', cast(opr."date" as date)) >= 7 then DATE_PART('year', cast(opr."date" as date)) + 1
-    	else DATE_PART('year', cast(opr."date" as date))
-    end as "Fiscal Year",
-
-
-    SUM(case
-    	when opr.currency = 'USD' then opr.amount * opr.counterfactuality
-    	else (opr."amount" * curr."CURRENCY RATE FINAL") * opr.counterfactuality
-    end) as "Counterfactuality Payment Amount",
-
-    count(*) "Number of Payments"
-
-    from public.oftw_payments_raw opr 
-    left join curr
-    on cast(opr."date" as DATE) = cast(curr."DATE" as DATE) and opr.currency = curr."CURRENCY SHORT"
-
-    where case
-    	when DATE_PART('month', cast(opr."date" as date)) >= 7 then DATE_PART('year', cast(opr."date" as date)) + 1
-    	else DATE_PART('year', cast(opr."date" as date))
-    end = {goal_year}
-
-    group by 1
-    order by 1
+    SELECT "Fiscal Year", "Counterfactuality Payment Amount", "Number of Payments"
+    FROM public.oftw_cf_money_moved_card
+    where "Fiscal Year" = {goal_year}
 
     '''
 
@@ -436,52 +312,8 @@ def generate_cards_goals_money_metrics(goal_year):
     ## Uses the latest currency date for each currency to best match latest date pulled ##
     query_current_arr_calculation = f'''
 
-    with max_curr as (
-
-    select "CURRENCY", "CURRENCY SHORT", MAX(cast("DATE" as date)) "max_date"
-    from public.oftw_currency_conversion
-    where "CURRENCY RATE" is not null
-    group by "CURRENCY", "CURRENCY SHORT"
-
-    )
-
-    ,curr as (
-    select curr_int.*,
-    case
-    	when curr_int."CURRENCY SHORT" in ('GBP', 'AUD', 'EUR') then curr_int."CURRENCY RATE"
-    	when curr_int."CURRENCY SHORT" in ('CAD', 'SGD', 'CHF') then (1.00 / curr_int."CURRENCY RATE")
-    	when curr_int."CURRENCY SHORT" in ('USD') then 1.00
-    end as "CURRENCY RATE FINAL"
-    from public.oftw_currency_conversion curr_int
-    inner join max_curr
-    on curr_int."CURRENCY SHORT" = max_curr."CURRENCY SHORT" 
-    and curr_int."CURRENCY" = max_curr."CURRENCY" 
-    and cast(curr_int."DATE" as date) = max_curr."max_date"
-    )
-
-    select 
-
-    count(distinct pledge.pledge_id) "Number of Pledges",
-    SUM(
-    case
-    
-    	when pledge.frequency in ('Annually', 'One-Time', 'Unspecified') and pledge.currency = 'USD' then pledge.contribution_amount
-    	when pledge.frequency in ('Monthly') and pledge.currency = 'USD' then (pledge.contribution_amount * 12)
-    	when pledge.frequency in ('Quarterly') and pledge.currency = 'USD' then (pledge.contribution_amount * 4)
-    	when pledge.frequency in ('Semi-Monthly') and pledge.currency = 'USD' then (pledge.contribution_amount * 24)
-    
-    	when pledge.frequency in ('Annually', 'One-Time', 'Unspecified') and pledge.currency != 'USD' then pledge.contribution_amount * curr."CURRENCY RATE FINAL"
-    	when pledge.frequency in ('Monthly') and pledge.currency != 'USD' then (pledge.contribution_amount * 12) * curr."CURRENCY RATE FINAL"
-    	when pledge.frequency in ('Quarterly') and pledge.currency != 'USD' then (pledge.contribution_amount * 4) * curr."CURRENCY RATE FINAL"
-    	when pledge.frequency in ('Semi-Monthly') and pledge.currency != 'USD' then (pledge.contribution_amount * 24) * curr."CURRENCY RATE FINAL"
-    
-    end
-    )::real as "Total Pledge Amount"
-
-    from public.oftw_pledges_raw pledge
-    left join curr
-    on pledge.currency = curr."CURRENCY SHORT"
-    where pledge.pledge_status = 'Active donor'
+    SELECT "Number of Pledges", "Total Pledge Amount"
+    FROM public.oftw_current_aprr_card
     
 
     '''
@@ -489,40 +321,9 @@ def generate_cards_goals_money_metrics(goal_year):
 
     query_arpp_payments = f'''
 
-    with curr as (
-    select *,
-    case
-    	when "CURRENCY SHORT" in ('GBP', 'AUD', 'EUR') then "CURRENCY RATE"
-    	when "CURRENCY SHORT" in ('CAD', 'SGD', 'CHF') then (1.00 / "CURRENCY RATE")
-    end as "CURRENCY RATE FINAL"
-    from public.oftw_currency_conversion
-    )
-
-    select 
-    case
-    	when DATE_PART('month', cast(opr."date" as date)) >= 7 then DATE_PART('year', cast(opr."date" as date)) + 1
-    	else DATE_PART('year', cast(opr."date" as date))
-    end as "Fiscal Year",
-
-    SUM(case
-    	when opr.currency = 'USD' then opr.amount
-    	else opr."amount" * curr."CURRENCY RATE FINAL"
-    end) as "Total Payment Amount",
-
-    count(distinct opr.pledge_id) "Number of Paying Pledges"
-
-
-    from public.oftw_payments_raw opr 
-    left join curr
-    on cast(opr."date" as DATE) = cast(curr."DATE" as DATE) and opr.currency = curr."CURRENCY SHORT"
-
-    where case
-    	when DATE_PART('month', cast(opr."date" as date)) >= 7 then DATE_PART('year', cast(opr."date" as date)) + 1
-    	else DATE_PART('year', cast(opr."date" as date))
-    end in ({goal_year}, {goal_year - 1})
-
-    group by 1
-    order by 1 
+    SELECT "Fiscal Year", "Total Payment Amount", "Number of Paying Pledges"
+    FROM public.oftw_aprr_1yr_comparison
+    where "Fiscal Year" in ({goal_year}, {goal_year - 1})
     
     '''
 
