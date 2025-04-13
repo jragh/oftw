@@ -15,6 +15,7 @@ _dash_renderer._set_react_version("18.2.0")
 server = Flask(__name__)
 
 app = Dash(__name__, external_stylesheets=dmc.styles.ALL, server=server)
+app.config.suppress_callback_exceptions=True
 
 
 
