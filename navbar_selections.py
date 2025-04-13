@@ -92,6 +92,83 @@ def navbar_selection_html():
 
 
 
+        ], style={'margin': '2.5rem 0 0.625rem 0', 'padding':'0 1rem'}),
+
+        html.Div([
+
+            ## Revenue Metrics Header ##
+            html.Span([
+
+                DashIconify(icon='clarity:dollar-bill-solid', height=24, width=24, style={'marginRight': '0.5rem'}),
+                html.P('Revenue Metrics', style={'fontSize': '1.1em', 'fontWeight': '500'}),
+                dmc.Divider(variant='solid', size='xs', color='#dee2e6', orientation='horizontal', style={'flex': '1', 'margin-left': '0.75rem'})
+
+            ], className='navigation-header-text'),
+
+
+            dmc.NavLink(
+
+                label = 'Total Payments Recieved (Annual)',
+                variant='filled',
+                className='navlink-option',
+                leftSection=DashIconify(icon='clarity:bar-chart-solid', height=24, width=24),
+                color='#6495ed',
+                id='navbar-mmg-1',
+                styles={
+                    'label': {'fontSize': '.75rem'},
+                    'root': {'borderRadius': '10px'}
+                }
+
+            ),
+
+            dmc.NavLink(
+
+                label = 'Total Payments Recieved (Monthly)',
+                variant='filled',
+                className='navlink-option',
+                leftSection=DashIconify(icon='clarity:line-chart-solid', height=24, width=24),
+                color='#6495ed',
+                id='navbar-mmg-2',
+                styles={
+                    'label': {'fontSize': '.75rem'},
+                    'root': {'borderRadius': '10px'}
+                }
+
+            ),
+
+            dmc.NavLink(
+
+                label = 'Average Revenue Per Pledge (Annual)',
+                variant='filled',
+                className='navlink-option',
+                leftSection=DashIconify(icon='clarity:bar-chart-solid', height=24, width=24),
+                color='#6495ed',
+                id='navbar-mmg-3',
+                styles={
+                    'label': {'fontSize': '.75rem'},
+                    'root': {'borderRadius': '10px'}
+                }
+
+            ),
+
+            dmc.NavLink(
+
+                label = 'Average Revenue Per Pledge (Monthly)',
+                variant='filled',
+                className='navlink-option',
+                leftSection=DashIconify(icon='clarity:bar-chart-solid', height=24, width=24),
+                color='#6495ed',
+                id='navbar-mmg-4',
+                styles={
+                    'label': {'fontSize': '.75rem'},
+                    'root': {'borderRadius': '10px'}
+                }
+
+            ),
+
+
+
+
         ], style={'margin': '2.5rem 0 0.625rem 0', 'padding':'0 1rem'})
 
     ]

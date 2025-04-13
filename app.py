@@ -12,7 +12,9 @@ from navbar_selections import navbar_selection_html
 
 _dash_renderer._set_react_version("18.2.0")
 
-app = Dash(external_stylesheets=dmc.styles.ALL)
+server = Flask(__name__)
+
+app = Dash(__name__, external_stylesheets=dmc.styles.ALL, server=server)
 
 
 
@@ -38,13 +40,14 @@ layout = dmc.AppShell(
         dmc.AppShellNavbar(
 
             id='main-navbar',
-            children=navbar_selection_html()
+            children=dmc.ScrollArea(navbar_selection_html())
 
         ),
 
         dmc.AppShellMain(
 
-            dmc.Container(generateNewSignupsPledgesGoals(2025),className='objs-key-results-header')
+            dmc.Container(generateNewSignupsPledgesGoals(2025),className='objs-key-results-header'),
+            style={'background-color': '#fafafa'}
         )
 
     ], padding='xs',

@@ -12,8 +12,8 @@
     justify-content: flex-start;
     min-height: 5rem;
     min-width: 22%;
-
     transition: transform .5s ease-in-out;
+    height: 100%
 
 }
 
@@ -29,7 +29,7 @@
     flex-direction: column;
     display: flex;
     min-width: 100%;
-    height: -webkit-fill-available;
+    height: fit-content;
     background-color: #fff;
 
 }

@@ -54,7 +54,7 @@ def generate_churned_before_payment_graph(start_year, end_year):
     inner join churns b
     on a."Fiscal Year" = b."Fiscal Year"
 
-    where a."Fiscal Year" >= 2018 and a."Fiscal Year" <= 2025
+    where a."Fiscal Year" >= {start_year} and a."Fiscal Year" <= {end_year}
 
     order by a."Fiscal Year" asc
 
