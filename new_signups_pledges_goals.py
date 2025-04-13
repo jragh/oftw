@@ -37,7 +37,7 @@ def generateNewSignupsPledgesGoals(goal_year):
         pledge_id,
         donor_id
 
-        from oftw.public.oftw_pledges_raw opr 
+        from public.oftw_pledges_raw opr 
         where pledge_status not in ('ERROR', 'Payment failure')
         and date_part('year', cast(pledge_starts_at as date)) >= 2015
 
@@ -69,7 +69,7 @@ def generateNewSignupsPledgesGoals(goal_year):
         pledge_id,
         donor_id
 
-        from oftw.public.oftw_pledges_raw opr 
+        from public.oftw_pledges_raw opr 
         where pledge_status not in ('ERROR', 'Payment failure')
         and date_part('year', cast(pledge_starts_at as date)) >= 2015
 
