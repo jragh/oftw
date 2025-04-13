@@ -29,13 +29,16 @@ layout = dmc.AppShell(
 
                 html.Img(src=get_asset_url('OFTW-Secondary-Logo-RGB-White-4k.png'), style={'maxHeight': '3.5rem', 'background': 'cornflowerblue'}),
 
-                html.H2('OFTW Merics Dashboard', style={'color': 'ivory'})
+                html.H2('OFTW Merics Dashboard', style={'color': 'ivory'}),
 
-
+                dmc.Burger(id='navigation-burger',
+                           size='sm',
+                           hiddenFrom='sm',
+                           opened=False)
 
             ],
-            h='100%', px='lg'),
-            style={'background-color': '#1971c2'}
+            px='lg', style={"height": 'fit-content'}),
+            style={'background-color': '#1971c2', "height": 'fit-content', 'z-index': '1000'}
 
         ),
 
@@ -55,15 +58,25 @@ layout = dmc.AppShell(
     ], padding='xs',
     header={'height': 75, 'width': 100},
     navbar={
-        "width": 300,
+        "width": 325,
         "breakpoint": "sm",
-        "collapsed": {"mobile": True},
-    }
+        "collapsed": {"mobile": True, "desktop": False},
+    },
+    id='appshell'
 
 )
 
 app.layout = dmc.MantineProvider(layout)
 pledges_donor_page_graph_selector(app)
+
+@app.callback(
+    Output("appshell", "navbar"),
+    Input("navigation-burger", "opened"),
+    State("appshell", "navbar"),
+)
+def toggle_navbar(opened, navbar):
+    navbar["collapsed"] = {"mobile": not opened, "desktop": False}
+    return navbar
 
 
 if __name__ == "__main__":
