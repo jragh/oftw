@@ -29,12 +29,13 @@ layout = dmc.AppShell(
 
                 html.Img(src=get_asset_url('OFTW-Secondary-Logo-RGB-White-4k.png'), style={'maxHeight': '3.5rem', 'background': 'cornflowerblue'}),
 
-                html.H2('OFTW Merics Dashboard')
+                html.H2('OFTW Merics Dashboard', style={'color': 'ivory'})
 
 
 
             ],
-            h='100%', px='lg')
+            h='100%', px='lg'),
+            style={'background-color': '#1971c2'}
 
         ),
 

@@ -13,48 +13,12 @@ def pledges_by_portfolio_frequency_true(beginning_year, end_year, selected_portf
     ## Create the Query with between filter, use the calendar from DMC to provide the filtering changes ##
     query_pledges_by_portfolio_frequency = f'''
 
-    with a as (
-        select pledge_id, 
-        frequency, 
-        cast(pledge_created_at as date) "pledge_created_at",
-        case 
-        	when date_part('month',cast(pledge_created_at as date)) >= 7 then date_part('year',cast(pledge_created_at as date)) + 1
-        	else date_part('year',cast(pledge_created_at as date))
-        end as "fiscal_year"
+    SELECT portfolio, frequency, "Ordering", SUM(pledge_sign_ups::real) pledge_sign_ups 
+    FROM public.oftw_pledges_by_portfolio_frequency
+    where fiscal_year >= {str(beginning_year)} and fiscal_year <= {str(end_year)}
+    group by portfolio, frequency, "Ordering"
+    order by "Ordering", frequency
 
-        from public.oftw_pledges_raw),
-
-        b as (
-
-        select distinct pledge_id, portfolio
-        from public.oftw_payments_raw opr),
-
-        c as (
-
-        select portfolio, count(distinct pledge_id), 
-        row_number() over (order by count(distinct pledge_id) desc) "Ordering"
-        from public.oftw_payments_raw
-        where portfolio not in ('One for the World Discretionary Fund', 'One for the World Operating Costs')
-        group by portfolio 
-        order by count(distinct pledge_id) desc
-
-        )
-
-        select b."portfolio", a."frequency", c."Ordering", 
-        count(distinct a.pledge_id) "pledge_sign_ups"
-        from a 
-        inner join b
-        on a.pledge_id = b.pledge_id
-
-        left join c
-        on b."portfolio" = c."portfolio"
-
-        where a."fiscal_year" >= {str(beginning_year)} and a."fiscal_year" <= {str(end_year)}
-        and b.portfolio not in ('One for the World Discretionary Fund', 'One for the World Operating Costs')
-        and a."frequency"  != ''
-
-        group by b."portfolio", a."frequency", c."Ordering"
-        order by c."Ordering", a."frequency" asc
     
     '''
 
