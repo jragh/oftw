@@ -27,17 +27,21 @@ layout = dmc.AppShell(
 
             dmc.Group([
 
-                html.Img(src=get_asset_url('OFTW-Secondary-Logo-RGB-White-4k.png'), style={'maxHeight': '3.5rem', 'background': 'cornflowerblue'}),
+                html.Span([
 
-                html.H2('OFTW Merics Dashboard', style={'color': 'ivory'}),
+                    html.Img(src=get_asset_url('OFTW-Secondary-Logo-RGB-White-4k.png'), style={'maxHeight': '3.5rem', 'background': 'cornflowerblue', 'align-self': 'center', 'margin-right': '1rem'}),
+                    html.H2('OFTW Merics Dashboard', style={'color': 'ivory'})
 
-                dmc.Burger(id='navigation-burger',
+                ],style={'margin': '0', 'padding': '0', 'display': 'flex', 'flex-direction': 'row'}),
+
+                html.Span([dmc.Burger(id='navigation-burger',
                            size='sm',
                            hiddenFrom='sm',
-                           opened=False)
+                           opened=False,
+                           color="rgb(255, 255, 240)")], style={'margin': '0', 'padding': '0', 'display': 'flex', 'flex-direction': 'row'})
 
             ],
-            px='lg', style={"height": 'fit-content'}),
+            px='lg', style={"height": 'fit-content', 'justify-content': 'space-between'}),
             style={'background-color': '#1971c2', "height": 'fit-content', 'z-index': '1000'}
 
         ),
@@ -53,15 +57,18 @@ layout = dmc.AppShell(
 
             dmc.Container(generateNewSignupsPledgesGoals(2025),className='objs-key-results-header'),
             style={'background-color': '#fafafa'}
-        )
+        ),
 
-    ], padding='xs',
+        dmc.AppShellAside(children=[])
+
+    ], padding='0',w='100%',
     header={'height': 75, 'width': 100},
     navbar={
         "width": 325,
         "breakpoint": "sm",
         "collapsed": {"mobile": True, "desktop": False},
     },
+    aside={'collapsed': {"mobile": True, "desktop": True}, 'width': '0'},
     id='appshell'
 
 )

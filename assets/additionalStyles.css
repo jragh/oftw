@@ -1,6 +1,6 @@
 .objs-key-results-header {
 
-    text-align: left;
+    max-width: 95%;
     padding: 0;
 }
 
@@ -41,6 +41,7 @@
     margin-top: .75rem;
     display: flex;
     flex-direction: column;
+    max-width: 100%;
 
 }
 
@@ -70,6 +71,18 @@
 
 
 .navigation-header-text {
+
+    color: #868e96;
+    font-size: 0.8em;
+    line-height: 1.45;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* margin-left: 1rem;
+    margin-right: 1rem; */
+
+}
+.navigation-header-text-two {
 
     color: #868e96;
     font-size: 0.8em;

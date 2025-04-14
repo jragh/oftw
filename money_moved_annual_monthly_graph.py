@@ -181,11 +181,11 @@ def generate_arpp_annual_graph(start_year, end_year):
             xaxis_tickfont={'size': 10},
             margin={'l':10, 'r': 10, 't': 10, 'b': 10},
             plot_bgcolor='#fff', paper_bgcolor="#fff",
-            hovermode='closest',
+            hovermode='x unified',
             yaxis_range=[0,polars_arpp_max])
     
     graph_arpp_annual.update_traces(textfont_size=10, marker={"cornerradius":5}, 
-                                                        hovertemplate="""Hello World""",
+                                                        hovertemplate="""<br><b>Total Payment Amount: </b>$%{customdata[2]:,.0d}<br><b>Number of Paying Pledges: </b>%{customdata[0]:,.0d}""",
                                                         textposition='inside',
                                                         texttemplate='''$%{y:,.2d}''')
     
@@ -269,7 +269,7 @@ def generate_arpp_monthly_graph(start_year, end_year, payment_platforms):
             showlegend=False)
     
     graph_arpp_monthly.update_traces(textfont_size=10, marker={"cornerradius":5, 'color':"#1971c2"}, 
-                                                        hovertemplate="""Hello World""",
+                                                        hovertemplate="""<b>%{x}</b><br><br><b>Average Revenue Per Pledge: </b>$%{y:,.0f}<br><b>Total Payment Amount: </b>$%{customdata[1]:,.0d}<br><b>Number of Paying Pledges: </b>%{customdata[0]:,.0d}""",
                                                         textposition='inside',
                                                         texttemplate='''$%{y:,.2d}''')
     
