@@ -25,7 +25,7 @@ def pledges_by_type_graph():
     ## max_pass_util_carrier_polar = (pass_util_carrier_polar.select(pl.col('TOTAL SEATS').max()).item()) * 1.10
 
     pledges_by_type_distinct_fig = px.bar(data_frame=pledges_by_type_distinct_polars, x="Fiscal Year", y="Number of Pledge Sign Ups", color="Pledge Status Grouped",
-                                          barmode='stack', color_discrete_map={'One-Time': '#845ef7', 'Subscription': '#1971c2'},
+                                          barmode='stack', color_discrete_map={'One-Time': '#71bdff', 'Subscription': '#0e4984'},
                                           text_auto="0.,3s",
                                           category_orders={'Pledge Status Grouped': ['Subscription', 'One-Time']},
                                           custom_data=["Pledge Status Grouped"])
@@ -39,11 +39,11 @@ def pledges_by_type_graph():
             'xanchor': 'center',
             'x': 0.5}, 
             legend_title_text = '<b>Pledge Type</b>',
-            xaxis_title=None,
+            xaxis_title="Fiscal Year",
             yaxis_title="Pledge Sign Ups",
             yaxis_tickfont={'size': 10},
             xaxis_tickfont={'size': 10},
-            margin={'l':10, 'r': 10, 't': 10, 'b': 10},
+            margin={'l':10, 'r': 10, 't': 10, 'b': 25},
             plot_bgcolor='#fff', paper_bgcolor="#fff",
             hovermode='closest',
             yaxis_range=[0, max_pledges_polar])

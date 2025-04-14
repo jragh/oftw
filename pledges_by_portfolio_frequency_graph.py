@@ -47,7 +47,7 @@ def pledges_by_portfolio_frequency_true(beginning_year, end_year, selected_portf
         polars_pledges_by_portfolio_frequency = polars_pledges_by_portfolio_frequency.filter(pl.col('portfolio').is_in(portfolio_listing) & pl.col('portfolio').is_in(selected_portfolios))
 
     graph_pledges_by_portfolio_frequency = px.bar(data_frame=polars_pledges_by_portfolio_frequency, y='portfolio', x='pledge_sign_ups', color='frequency',
-                                                  orientation='h', barmode='stack', text_auto='0.,3s',
+                                                  orientation='h', barmode='stack', text_auto='0.,3s', custom_data=['frequency'],
                                                   category_orders={'portfolio': portfolio_listing,
                                                                    'frequency': ['Annually', 'Quarterly', 'Monthly', 'Semi-Monthly', 'One-Time', 'Unspecified']},
                                                 color_discrete_map={'Annually': '#1e466e',
@@ -57,12 +57,13 @@ def pledges_by_portfolio_frequency_true(beginning_year, end_year, selected_portf
                                                                     'One-Time': '#FFE6B7',
                                                                     'Unspecified':'#CDC6B8'})
     
-    graph_pledges_by_portfolio_frequency.update_traces(textfont_size=10, marker={'cornerradius':4}, hovertemplate='Will Update this after ngl', textposition='inside')
+    graph_pledges_by_portfolio_frequency.update_traces(textfont_size=10, marker={'cornerradius':4}, hovertemplate='<b>%{customdata[0]}: </b>%{x:,.0d} Pledge Sign Up(s)<extra></extra>', textposition='inside')
 
     graph_pledges_by_portfolio_frequency.update_layout(yaxis={'tickfont': {'size': 10}, 'categoryorder': 'total ascending'}, 
-                                  margin={'l':10, 'r': 10, 't': 10, 'b': 8},
+                                  margin={'l':10, 'r': 10, 't': 10, 'b': 25},
                                plot_bgcolor='#fff', paper_bgcolor="#fff",
-                               legend={'font': {'size': 10}, 'orientation':'h'})
+                               legend={'font': {'size': 10}, 'orientation':'h'},
+                               hovermode='y unified')
     
     graph_pledges_by_portfolio_frequency.update_legends(yanchor="bottom", y=1.02, xanchor= 'right', x= 0.7, title=None)
 

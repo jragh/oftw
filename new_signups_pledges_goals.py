@@ -135,8 +135,22 @@ def generateNewSignupsPledgesGoals(goal_year):
 
         gv1_progress = [
 
-            dmc.ProgressSection(dmc.ProgressLabel(f'100%'), value=round(((100.00 / gv1) * gv1_goal), 0), color='cyan'),
-            dmc.ProgressSection(dmc.ProgressLabel(f'{round(((100.00 / (gv1_goal * 1.00)) * (gv1 - gv1_goal)), 0):.0f}%'), value=(100 - round(((100.00 / gv1) * gv1_goal), 0)), color='green')
+            dmc.FloatingTooltip(
+
+                dmc.ProgressSection(dmc.ProgressLabel(f'100%'), value=round(((100.00 / gv1) * gv1_goal), 0), color='cyan'),
+                boxWrapperProps={"display": "contents"},
+                label=f'Active Donors Goal Progress: 100%'
+
+            ),
+
+            dmc.FloatingTooltip(
+
+                dmc.ProgressSection(dmc.ProgressLabel(f'{round(((100.00 / (gv1_goal * 1.00)) * (gv1 - gv1_goal)), 0):.0f}%'), value=(100 - round(((100.00 / gv1) * gv1_goal), 0)), color='green'),
+                boxWrapperProps={"display": "contents"},
+                label=f'Active Donors Goal Exceeded: {round(((100.00 / (gv1_goal * 1.00)) * (gv1 - gv1_goal)), 0):.0f}%'
+
+            )
+            
 
         ]
 
@@ -144,7 +158,13 @@ def generateNewSignupsPledgesGoals(goal_year):
 
         gv1_progress = [
 
-            dmc.ProgressSection(dmc.ProgressLabel(f'{round(((100.00 / (gv1_goal*1.00)) * gv1), 0):.0f}%'), value=round(((100.00 / (gv1_goal * 1.00)) * gv1), 0), color='cyan')
+            dmc.FloatingTooltip(
+
+                dmc.ProgressSection(dmc.ProgressLabel(f'{round(((100.00 / (gv1_goal*1.00)) * gv1), 0):.0f}%'), value=round(((100.00 / (gv1_goal * 1.00)) * gv1), 0), color='cyan'),
+                boxWrapperProps={"display": "contents"},
+                label=f'Active Donors Goal Progress: {round(((100.00 / (gv1_goal*1.00)) * gv1), 0):.0f}%'
+
+            )
 
         ]
 
@@ -158,8 +178,21 @@ def generateNewSignupsPledgesGoals(goal_year):
 
         gv2_progress = [
 
-            dmc.ProgressSection(dmc.ProgressLabel(f'100%'), value=round(((100.00 / gv2) * gv2_goal), 0), color='cyan'),
-            dmc.ProgressSection(dmc.ProgressLabel(f'{round(((100.00 / (gv2_goal * 1.00)) * (gv2 - gv2_goal)), 0):.0f}%'), value=(100 - round(((100.00 / gv2) * gv2_goal), 0)), color='green')
+            dmc.FloatingTooltip(
+
+                dmc.ProgressSection(dmc.ProgressLabel(f'100%'), value=round(((100.00 / gv2) * gv2_goal), 0), color='cyan'),
+                boxWrapperProps={"display": "contents"},
+                label=f'Active Pledges Goal Progress: 100%'
+
+            ),
+
+            dmc.FloatingTooltip(
+
+                dmc.ProgressSection(dmc.ProgressLabel(f'{round(((100.00 / (gv2_goal * 1.00)) * (gv2 - gv2_goal)), 0):.0f}%'), value=(100 - round(((100.00 / gv2) * gv2_goal), 0)), color='green'),
+                boxWrapperProps={"display": "contents"},
+                label=f'Active Pledges Goal Exceeded: {round(((100.00 / (gv2_goal * 1.00)) * (gv2 - gv2_goal)), 0):.0f}%'
+
+            )         
 
         ]
 
@@ -167,7 +200,13 @@ def generateNewSignupsPledgesGoals(goal_year):
 
         gv2_progress = [
 
-            dmc.ProgressSection(dmc.ProgressLabel(f'{round(((100.00 / (gv2_goal*1.00)) * gv2), 0):.0f}%'), value=round(((100.00 / (gv2_goal * 1.00)) * gv2), 0), color='cyan')
+            dmc.FloatingTooltip(
+
+                dmc.ProgressSection(dmc.ProgressLabel(f'{round(((100.00 / (gv2_goal*1.00)) * gv2), 0):.0f}%'), value=round(((100.00 / (gv2_goal * 1.00)) * gv2), 0), color='cyan'),
+                boxWrapperProps={"display": "contents"},
+                label=f'Active Pledges Goal Progress: {round(((100.00 / (gv2_goal*1.00)) * gv2), 0):.0f}%'
+
+            )
 
         ]
 
@@ -186,7 +225,13 @@ def generateNewSignupsPledgesGoals(goal_year):
 
         gv3_progress = [
 
-            dmc.ProgressSection(dmc.ProgressLabel(f'Exceed Expectations'), value=100, color='green')
+            dmc.FloatingTooltip(
+
+                dmc.ProgressSection(dmc.ProgressLabel(f'Exceed Expectations'), value=100, color='green'),
+                boxWrapperProps={"display": "contents"},
+                label=f'Pledge Attrition Rate Progress: Exceed Expectations'
+
+            )
 
         ]
         
@@ -194,7 +239,13 @@ def generateNewSignupsPledgesGoals(goal_year):
 
         gv3_progress = [
 
-            dmc.ProgressSection(dmc.ProgressLabel(f'Within Threshold (5%)'), value=100, color='orange')
+            dmc.FloatingTooltip(
+
+                dmc.ProgressSection(dmc.ProgressLabel(f'Within Threshold (5%)'), value=100, color='orange'),
+                boxWrapperProps={"display": "contents"},
+                label=f'Pledge Attrition Rate Progress: Within 5% Threshold'
+
+            )
 
         ]
 
@@ -202,7 +253,13 @@ def generateNewSignupsPledgesGoals(goal_year):
 
         gv3_progress = [
 
-            dmc.ProgressSection(dmc.ProgressLabel(f'Above Target'), value=100, color='red')
+            dmc.FloatingTooltip(
+
+                dmc.ProgressSection(dmc.ProgressLabel(f'Above Target'), value=100, color='red'),
+                boxWrapperProps={"display": "contents"},
+                label=f'Pledge Attrition Rate Progress: Failing, Currently Above Target'
+
+            )
 
         ]
 
@@ -215,8 +272,21 @@ def generateNewSignupsPledgesGoals(goal_year):
 
     gv4_progress = [
 
-        dmc.ProgressSection(dmc.ProgressLabel(f'Subscription'), value=round((gv4_subscription / gv4_total) * 100, 0), color='#1971c2'),
-        dmc.ProgressSection(dmc.ProgressLabel(f'One Time'), value=round((gv4_one_time / gv4_total) * 100, 0), color='#845ef7')
+        dmc.FloatingTooltip(
+
+            dmc.ProgressSection(dmc.ProgressLabel(f'Subscription'), value=round((gv4_subscription / gv4_total) * 100, 0), color='#1971c2'),
+            boxWrapperProps={"display": "contents"},
+            label=f'Percent Share Subscription Pledges: {((gv4_subscription / gv4_total) * 100):,.1f}%'
+
+        ),
+
+        dmc.FloatingTooltip(
+
+            dmc.ProgressSection(dmc.ProgressLabel(f'One Time'), value=round((gv4_one_time / gv4_total) * 100, 0), color='#845ef7'),
+            boxWrapperProps={"display": "contents"},
+            label=f'Percent Share One-Time Pledges: {((gv4_one_time / gv4_total) * 100.00):,.1f}%'
+
+        )
 
     ]
 
@@ -225,7 +295,7 @@ def generateNewSignupsPledgesGoals(goal_year):
 
             html.Span([
                 
-                html.H2('Key Objectives & Goals', style={'marginBottom': '0', 'fontSize': 'xx-large', 'marginTop': '0'}),
+                html.H2('Key Objectives & Goals', style={'marginBottom': '0', 'fontSize': 'xx-large', 'marginTop': '0.6rem'}),
                 html.H4('Pledges & Donors', style={'color': 'grey', 'margin': '0'})
                 
             ])
@@ -388,7 +458,7 @@ def generateNewSignupsPledgesGoals(goal_year):
                        className='text-muted', id='pledges-donor-graph-description'),
                 
                 html.Span([
-                    dcc.Graph(style={'height': '35vh'}, figure=pledges_by_type_graph(), id='pledges-donor-graph-figure')
+                    dcc.Graph(style={'height': '38.5vh', 'margin-bottom': '0.6rem'}, figure=pledges_by_type_graph(), id='pledges-donor-graph-figure')
                 ], id='pledges-donor-graph-figure-span')
 
             

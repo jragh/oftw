@@ -97,7 +97,7 @@ def pledges_donor_page_graph_selector(app):
                        Pledges are split into One-Time and Subscription (Ongoing, Annual, Monthly, etc.)
                        Focuses on when pledge was signed up, regardless if pledge is currently cancelled / churned.'''
             
-            return 'Created Pledges By Pledge Type', 'Subscription & One-Time', description, dcc.Graph(style={'height': '34vh'}, figure=pledges_by_type_graph(), id='pledges-donor-graph-figure')
+            return 'Created Pledges By Pledge Type', 'Subscription & One-Time', description, dcc.Graph(style={'height': '38.5vh', 'margin-bottom': '0.6rem'}, figure=pledges_by_type_graph(), id='pledges-donor-graph-figure')
         
         elif ctx_id_activated == navigation_ids_intermediate[1]:
 
@@ -119,7 +119,7 @@ def pledges_donor_page_graph_selector(app):
 
             subtitle = 'FY2014 - FY2025 (Subscription & One Time)'
 
-            return 'Created Pledges By Portfolio & Frequency', subtitle, description, dcc.Graph(style={'height': '34vh'}, figure=pledges_by_portfolio_frequency_true(2014, 2025, starting_portfolio_list), id='pledges-donor-graph-figure-2')
+            return 'Created Pledges By Portfolio & Frequency', subtitle, description, dcc.Graph(style={'height': '37vh', 'margin-bottom': '0.6rem'}, figure=pledges_by_portfolio_frequency_true(2014, 2025, starting_portfolio_list), id='pledges-donor-graph-figure-2')
         
         elif ctx_id_activated == navigation_ids_intermediate[2]:
 
@@ -131,7 +131,7 @@ def pledges_donor_page_graph_selector(app):
 
             subtitle = 'FY2018 - FY2025 (Subscription Based Pledges)'
 
-            return title, subtitle, description, dcc.Graph(style={'height': '37vh'}, figure=generate_churned_pledges_by_fiscal_year(2018, 2025), id='pledges-donor-graph-figure-3')
+            return title, subtitle, description, dcc.Graph(style={'height': '40vh'}, figure=generate_churned_pledges_by_fiscal_year(2018, 2025), id='pledges-donor-graph-figure-3')
         
 
         elif ctx_id_activated == navigation_ids_intermediate[3]:
@@ -143,7 +143,7 @@ def pledges_donor_page_graph_selector(app):
             description = '''Displays the Number of Pledges Started vs Number of Pledges Churned without a single payment, based on the Fiscal Year of the pledge starting.
             Only includes Subscription based pledges; Churned Pledges are those with status of "Churned Doner" or "Payment Failed".'''
 
-            return title, subtitle, description, dcc.Graph(style={'height': '37.5vh'}, figure=generate_churned_before_payment_graph(2018, 2025), id='pledges-donor-graph-figure-4')
+            return title, subtitle, description, dcc.Graph(style={'height': '39vh', 'margin-bottom': '0.6rem'}, figure=generate_churned_before_payment_graph(2018, 2025), id='pledges-donor-graph-figure-4')
         
 
         elif ctx_id_activated == navigation_ids_intermediate[4]:
@@ -154,7 +154,7 @@ def pledges_donor_page_graph_selector(app):
 
             description = '''Displays the Total Payments Recieved in USD in the specified Fiscal Year, split by Payment Frequency. Includes both One-Time and Subscription payments.'''
 
-            return title, subtitle, description, dcc.Graph(style={'height': '37.5vh'}, figure=generate_money_moved_annual_graph(2018, 2025), id='pledges-donor-graph-figure-5')
+            return title, subtitle, description, dcc.Graph(style={'height': '38vh', 'margin-bottom': '0.6rem'}, figure=generate_money_moved_annual_graph(2018, 2025), id='pledges-donor-graph-figure-5')
         
 
         elif ctx_id_activated == navigation_ids_intermediate[5]:
@@ -167,7 +167,7 @@ def pledges_donor_page_graph_selector(app):
             Includes both One-Time and Subscription payments.
             Fiscal Year Starts in July, So July is Month 1, August is Month 2, etc.'''
 
-            return title, subtitle, description, dcc.Graph(style={'height': '37.5vh'}, figure=generate_money_moved_monthly_graph(2024, 2025), id='pledges-donor-graph-figure-6')
+            return title, subtitle, description, dcc.Graph(style={'height': '37.5vh', 'margin-bottom': '0.6rem'}, figure=generate_money_moved_monthly_graph(2024, 2025), id='pledges-donor-graph-figure-6')
 
 
         elif ctx_id_activated == navigation_ids_intermediate[6]:
@@ -180,7 +180,7 @@ def pledges_donor_page_graph_selector(app):
             Calculated by dividing Total Payment Revenue by Total Distinct Pledges within a given fiscal year. 
             Split by One Time & Subscription Pledges.'''
 
-            return title, subtitle, description, dcc.Graph(style={'height': '37.5vh'}, figure=generate_arpp_annual_graph(2018, 2025), id='pledges-donor-graph-figure-7')
+            return title, subtitle, description, dcc.Graph(style={'height': '37.5vh', 'margin-bottom': '0.6rem'}, figure=generate_arpp_annual_graph(2018, 2025), id='pledges-donor-graph-figure-7')
         
         elif ctx_id_activated == navigation_ids_intermediate[7]:
 
@@ -192,7 +192,7 @@ def pledges_donor_page_graph_selector(app):
             Calculated by dividing Total Payment Revenue by Total Distinct Pledges within a given Fiscal Year & Month. 
             Subscription Based Pledges only, Filter by Payment Platform in the options.'''
 
-            return title, subtitle, description, dcc.Graph(style={'height': '37.5vh'}, figure=generate_arpp_monthly_graph(2024, 2025, []), id='pledges-donor-graph-figure-8')
+            return title, subtitle, description, dcc.Graph(style={'height': '37.5vh', 'margin-bottom': '0.6rem'}, figure=generate_arpp_monthly_graph(2024, 2025, []), id='pledges-donor-graph-figure-8')
         
         else:
 
