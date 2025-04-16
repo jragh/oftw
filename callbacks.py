@@ -14,12 +14,13 @@ from churned_pledges_by_fiscal_year_graph import generate_churned_pledges_by_fis
 from churned_before_payment_graph import generate_churned_before_payment_graph
 from cards_goals_pledges_churn import generate_cards_goals_pledges_churn, generate_cards_goals_money_metrics
 from money_moved_annual_monthly_graph import generate_money_moved_annual_graph, generate_arpp_annual_graph, generate_money_moved_monthly_graph, generate_arpp_monthly_graph
+from ttv_by_fiscal_year_graph import generate_ttv_by_fiscal_year
 
 
 def pledges_donor_page_graph_selector(app):
         
     ## Navigation Consts ##
-    navigation_ids = ['navbar-okr-1','navbar-okr-2', 'navbar-okr-3', 'navbar-okr-4', 'navbar-mmg-1', 'navbar-mmg-2', 'navbar-mmg-3', 'navbar-mmg-4']
+    navigation_ids = ['navbar-okr-1','navbar-okr-2', 'navbar-okr-3', 'navbar-okr-4', 'navbar-mmg-1', 'navbar-mmg-2', 'navbar-mmg-3', 'navbar-mmg-4', 'navbar-msc-1']
     navigation_inputs = [Input(i, 'n_clicks') for i in navigation_ids]
 
     navigation_outputs = [Output(i, 'active') for i in navigation_ids]
@@ -193,6 +194,19 @@ def pledges_donor_page_graph_selector(app):
             Subscription Based Pledges only, Filter by Payment Platform in the options.'''
 
             return title, subtitle, description, dcc.Graph(style={'height': '37.5vh', 'margin-bottom': '0.6rem'}, figure=generate_arpp_monthly_graph(2024, 2025, []), id='pledges-donor-graph-figure-8')
+        
+        elif ctx_id_activated == navigation_ids_intermediate[8]:
+
+            title = 'Time to First Payment (TFP) By Fiscal Year'
+
+            subtitle = 'FY2016 - FY2025 (Subscription Payments Only)'
+
+            description = '''Displays the Number of Subscription Pledges by Fiscal Year, split by the time between Pledge Creation Date & Pledge Start Date (TFP).
+            TFP represents the duration it takes for OFTW to begin generating revenue from a subscrption. 
+            A shorter TFP illustrates new donors are excited to begin donating and will most likely exhibit lower churn.
+            A higher TFP increases the liklihood of churn, illustrates potential incorrect market fit, and ineffective conveyance of OFTW's mission and importance.'''
+
+            return title, subtitle, description, dcc.Graph(style={'height': '35.75vh', 'margin-bottom': '0.6rem'}, figure=generate_ttv_by_fiscal_year(2016, 2025), id='pledges-donor-graph-figure-9') 
         
         else:
 
@@ -782,6 +796,72 @@ def pledges_donor_page_graph_selector(app):
 
             return return_array
         
+        elif triggered_id == navigation_ids_intermediate[8]:
+
+            return_array = [
+
+                ## Button displayed to the end user ##
+                dmc.Button(
+                    children=[
+                        
+                        html.Div([
+                            html.P('Chart Filters', style={'fontSize': '0.85rem', 'margin': '0.5rem 0'}),
+                            dmc.Badge('1 Option', variant='filled', color='#1971c2', style={'marginBottom': '0.5rem'})
+                        ],style={'display': 'flex', 'flexDirection': 'column', 'flex': '1'})
+                    ],
+                    leftSection=DashIconify(icon='clarity:settings-solid', height=24, width=24),
+                    color='#6495ed',
+                    radius='md',
+                    size='md',
+                    variant='filled',
+                    disabled=False,
+                    style={'height': '100%'},
+                    id='chart-settings-button-click'
+
+                ),
+
+                ## Modal for Filtering ##
+                dmc.Modal(
+                    id='chart-settings-modal',
+                    centered=True,
+                    children=[
+                        html.H2('Change in Time to First Payment (TFP, Annual)', style={'marginBottom': '0.05em', 'marginTop': '0'}),
+                        html.P('Chart Options', className='text-muted'),
+                        html.Hr(style={'margin': '0.5rem 0'}),
+
+                        ## Fiscal Year Range Selection ##
+                        dmc.YearPickerInput(
+                            type='range',
+                            label='Select Fiscal Year Range',
+                            placeholder='Select a range of Fiscal Years...',
+                            leftSection=DashIconify(icon='clarity:calendar-line', width=16, height=16),
+                            minDate=datetime(2016, 1, 1),
+                            maxDate=datetime(2025, 1, 1),
+                            value=[datetime(2016, 1, 1), datetime(2025, 1, 1)],
+                            id='date-filter-chart-8',
+                            style={'marginBottom': '1.5rem'},
+                            clearable=False
+                        ),
+
+                        dmc.Button("Click to set options",
+                                   fullWidth=True, 
+                                   variant='filled', 
+                                   leftSection=DashIconify(icon='clarity:check-line', width=24, height=24),
+                                   color="rgb(32, 201, 151)",
+                                   id='modal-filter-accept-button-8'
+                        )
+
+                    ],
+                    styles={
+                        'body': {'padding': '0 2.5rem 3rem 2.5rem'},
+                        'header': {'paddingTop': '0', 'paddingBottom': '0'}
+                    }
+                )
+
+            ]
+
+            return return_array
+        
         else:
 
             return no_update
@@ -1108,7 +1188,7 @@ def pledges_donor_page_graph_selector(app):
 
             return title, cards
         
-        elif ctx_id_activated in navigation_ids_intermediate[4:8]:
+        elif ctx_id_activated in navigation_ids_intermediate[4:9]:
 
             print(ctx_id_activated)
 
