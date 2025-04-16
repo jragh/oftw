@@ -838,7 +838,7 @@ def pledges_donor_page_graph_selector(app):
                             minDate=datetime(2016, 1, 1),
                             maxDate=datetime(2025, 1, 1),
                             value=[datetime(2016, 1, 1), datetime(2025, 1, 1)],
-                            id='date-filter-chart-8',
+                            id='date-filter-chart-9',
                             style={'marginBottom': '1.5rem'},
                             clearable=False
                         ),
@@ -848,7 +848,7 @@ def pledges_donor_page_graph_selector(app):
                                    variant='filled', 
                                    leftSection=DashIconify(icon='clarity:check-line', width=24, height=24),
                                    color="rgb(32, 201, 151)",
-                                   id='modal-filter-accept-button-8'
+                                   id='modal-filter-accept-button-9'
                         )
 
                     ],
@@ -1164,6 +1164,48 @@ def pledges_donor_page_graph_selector(app):
         subtitle = f'''FY{years_selected[0]} - FY{years_selected[1]} (Subscription Payments Only)'''
 
         return generate_arpp_monthly_graph(years_selected[0], years_selected[1], payments_selected), subtitle
+    
+
+    ##### Section for Time to First Payment Annual #####
+    @app.callback(
+            Output('pledges-donor-graph-figure-9', 'figure'),
+            Output(component_id='pledges-donor-graph-subtitle', component_property='children', allow_duplicate=True),
+            Input('modal-filter-accept-button-9', 'n_clicks'),
+            State('date-filter-chart-9', 'value'),
+            supress_ballback_exceptions=True,
+            prevent_initial_call=True
+            
+    )
+    def update_filter_modal_9(n_clicks, fiscal_years):
+
+        ctx = callback_context
+
+        if ('value' not in ctx.states_list[0].keys()):
+
+            return no_update, no_update
+        
+        ## If no years are selected, default to 2018 - 2025 ##
+        if ctx.states_list[0]['value'] == [] or (ctx.states_list[0]['value'][0] is None):
+
+            subtitle = f'''FY2016 - FY2025 (Subscription Payments Only)'''
+
+            return generate_ttv_by_fiscal_year(2016, 2025), subtitle
+        
+        ## If 1 year is selected only ##
+        if (len(ctx.states_list[0]['value']) == 1) or (ctx.states_list[0]['value'][1] is None):
+
+            first_year = ctx.states_list[0]['value'][0].split('-')[0]
+
+            subtitle = f'''FY{first_year} - FY2025 (Subscription Payments Only)'''
+
+            return generate_ttv_by_fiscal_year(first_year, 2025), subtitle
+        
+        ## Normal Conditions ##
+        years_selected = [ctx.states_list[0]['value'][0].split('-')[0], ctx.states_list[0]['value'][1].split('-')[0]]
+
+        subtitle = f'''FY{years_selected[0]} - FY{years_selected[1]} (Subscription Payments Only)'''
+
+        return generate_ttv_by_fiscal_year(years_selected[0], years_selected[1]), subtitle
 
 
     ###### Section for selecting and generating cards for analytics ######
