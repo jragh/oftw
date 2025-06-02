@@ -22,7 +22,7 @@ meta_tags = [
     {"property": "og:title", "content": "OFTW Analytics Challenge Dashboard"},
     {"http-equiv": "X-UA-Compatible", "content": "IE=edge"},
     {"charset": "utf-8"},
-    {"property": "og:image", "content": "/assets/mainScreen.png"},
+    {"property": "og:image", "content": "https://oftw-production.up.railway.app/assets/mainScreen.png"},
     {"property": "og:type", "content": "website"}
 
 ]
