@@ -14,7 +14,18 @@ _dash_renderer._set_react_version("18.2.0")
 
 server = Flask(__name__)
 
-app = Dash(__name__, external_stylesheets=dmc.styles.ALL, server=server)
+meta_tags = [
+
+    {"name": "viewport", "content": "width=device-width, initial-scale=1.0"},
+    {"name": "description", "content": "OFTW Analytics Dashboard; Part of Plotly Visualization Challenge"},
+    {"http-equiv": "X-UA-Compatible", "content": "IE=edge"},
+    {"charset": "utf-8"},
+    {"property": "og:image", "href": "/assets/mainScreen.png"},
+    {"property": "og:type", "content": "website"}
+
+]
+
+app = Dash(__name__, external_stylesheets=dmc.styles.ALL, server=server, meta_tags=meta_tags, title="OFTW Analytics Challenge Dashboard")
 app.config.suppress_callback_exceptions=True
 
 
