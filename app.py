@@ -18,9 +18,11 @@ meta_tags = [
 
     {"name": "viewport", "content": "width=device-width, initial-scale=1.0"},
     {"name": "description", "content": "OFTW Analytics Dashboard; Part of Plotly Visualization Challenge"},
+    {"property": "og:description", "content": "OFTW Analytics Dashboard; Part of Plotly Visualization Challenge"},
+    {"property": "og:title", "content": "OFTW Analytics Challenge Dashboard"},
     {"http-equiv": "X-UA-Compatible", "content": "IE=edge"},
     {"charset": "utf-8"},
-    {"property": "og:image", "href": "/assets/mainScreen.png"},
+    {"property": "og:image", "content": "/assets/mainScreen.png"},
     {"property": "og:type", "content": "website"}
 
 ]
